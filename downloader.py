@@ -96,6 +96,7 @@ def getType(video):
     return video['type'][0].split('/')[1]
 
 def displayVideos(videos):
+    print "Found " + str(len(videos)) + " video(s)"
     for i, video in enumerate(videos):
         print str(i+1) + '.'
         print 'Format: ' + getType(video)
@@ -105,10 +106,31 @@ def displayVideos(videos):
             print 'Size: ' + video['size'][0]
         if ' codecs' in video:
             print 'Codecs: ' + video[' codecs'][0]
-        print getUrl(video)
+        #print getUrl(video)
         print ''
+
+def downloadVideo(link, name):
+    print "Will download video and save as " + name
+    file = urllib.URLopener()
+    file.addheaders = [("User-agent", "lla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko)")]
+    try: 
+        file.retrieve(link, name)
+
+    except IOError as e:
+        print "Sorry but exception " + str(e[1]) + " was thrown. Something might gone wrong. Keep calm. "
+    print "Done."
+
+def askForDownload(videos):
+    print "Which version you would like to download?"
+    userInput = int(input("Give number between 1-" + str(len(videos)) + ": ")) - 1
+    if (userInput < 0) or (userInput > len(videos)) :
+       print "You've gave wrong number. Bailing out. Bye!"
+       return
+    downloadVideo(getUrl(videos[userInput]), 'video.'+ getType(videos[userInput]))
+		
 
 
 if __name__ == '__main__':
     videos = getVideos('http://www.youtube.com/watch?v=ALYateVoC7M')
     displayVideos(videos)
+    askForDownload(videos)
