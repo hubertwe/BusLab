@@ -2,34 +2,113 @@
 
 import urlparse
 import urllib
+import re
 
-def getFileUrl(videoUrl):
+def getFirstParam(videosString):
+    return videosString.split('=')[0]
+
+def getStremMapString(content):
+    videos = content.split('url_encoded_fmt_stream_map=')[1]
+    videos = videos.split('adaptive_fmts=')
+    firstParam = getFirstParam(videos[0])
+    videos = videos[0].split(',' + firstParam + '=')
+    for i, video in enumerate(videos[1:]):
+        videos[i+1] = firstParam + '=' + video
+    return videos
+
+def getAdaptiveFmtsString(content):
+    videos = content.split('adaptive_fmts=')[1]
+    videos = videos.split('url_encoded_fmt_stream_map=')
+    firstParam = getFirstParam(videos[0])
+    videos = videos[0].split(',' + firstParam + '=')
+    for i, video in enumerate(videos[1:]):
+        videos[i+1] = firstParam + '=' + video
+    return videos
+
+
+def getDecodedVideosString(content):
+    streamMap = getStremMapString(content)
+    adaptiveFtms = getAdaptiveFmtsString(content)
+    return streamMap + adaptiveFtms
+
+def getEncodedVideosString(content):
+    pass
+
+def isValidUrl(parsedUrl):
+    return 'title' not in parsedUrl
+
+def getEncodedVideos(content):
+    pass
+
+def getDecodedVideos(content):
+    videos = list()
+    videosString = getDecodedVideosString(content)
+    for string in videosString:
+        video = urlparse.parse_qs(string)
+        if not isValidUrl(video):
+            continue
+        videos.append(video)
+    return videos
+
+def getUrl(video):
+    url = video['url'][0]
+    for param in video:
+        if param == 'type' or param == ' codecs' or param == 'quality' or param == 'fallback_host' or param == 'url':
+            continue
+        url += '&' + param + '=' + video[param][0]
+    return url
+
+def getVideos(videoUrl):
     videoId = urlparse.parse_qs(urlparse.urlparse(videoUrl).query)['v'][0]
     content = urllib.urlopen("http://www.youtube.com/get_video_info?video_id="+videoId).read()
-    '''Nie ogarniam czemu to unquote nie potrafi od razu wszystkiego zdekodowac, trzeba 3 razy odpalac'''
     content = urllib.unquote(content)
     content = urllib.unquote(content)
     content = urllib.unquote(content)
+    decodedVideos = getDecodedVideos(content)
+    return decodedVideos
 
-    allFiles = content.split('&url=')
-    videoFiles = list()
-    '''Pierwszy i ostatni element to nie linki'''
-    for file in allFiles[1:-1]:
-        '''Czy to sa poprawne linki?'''
-        if getType(file)[0] == 'video':
-            videoFiles.append(file)
-            print file + '\n\n'
-    '''Pierwszy element to nie link ostatni jest jakis dziwny zawsze,dlatego ich nie biore'''
-    return videoFiles
+def revers(signature):
+    return signature[::-1]
 
-'''Zwraca dwa elementy pierwszy:adio/video kolejny:rozszerzenie'''
-def getType(url):
-    encodedUrl = urlparse.parse_qs(url)
-    '''Encoded url to mapa gdzie kazdemu kluczowi odpowiada lista jednoelementowa (troche to dziwne)'''
-    typeParts = encodedUrl['type'][0].split('/')
-    return (typeParts[0], typeParts[1])
+def splice(signature, b):
+    return list(signature[b:])
+
+def swap(signature, b):
+    sig = list(signature)
+    temp = sig[0]
+    sig[0] = sig[b % len(sig)]
+    sig[b] = temp
+    return sig
+
+def decodeSignature(signature):
+    sig = list(signature)
+    sig = splice(sig, 2)
+    sig = revers(sig)
+    sig = splice(sig, 3)
+    sig = revers(sig)
+    sig = splice(sig, 3)
+    sig = revers(sig)
+    sig = swap(sig, 2)
+    sig = ''.join(sig)
+    return sig
+
+def getType(video):
+    return video['type'][0].split('/')[1]
+
+def displayVideos(videos):
+    for i, video in enumerate(videos):
+        print str(i+1) + '.'
+        print 'Format: ' + getType(video)
+        if 'quality' in video:
+            print 'Quality: ' + video['quality'][0]
+        if 'size' in video:
+            print 'Size: ' + video['size'][0]
+        if ' codecs' in video:
+            print 'Codecs: ' + video[' codecs'][0]
+        print getUrl(video)
+        print ''
 
 
 if __name__ == '__main__':
-    urls = getFileUrl('http://www.youtube.com/watch?v=iArR3mT2wo0')
-    urllib.urlretrieve(urls[0], 'video.' + getType(urls[0])[1])
+    videos = getVideos('http://www.youtube.com/watch?v=ALYateVoC7M')
+    displayVideos(videos)
