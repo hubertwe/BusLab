@@ -3,6 +3,7 @@
 import urlparse
 import urllib
 import re
+import sys
 
 def getFirstParam(videosString):
     return videosString.split('=')[0]
@@ -112,7 +113,7 @@ def displayVideos(videos):
 def downloadVideo(link, name):
     print "Will download video and save as " + name
     file = urllib.URLopener()
-    file.addheaders = [("User-agent", "lla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko)")]
+    file.addheaders = [("User-agent", "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko)")]
     try: 
         file.retrieve(link, name)
 
@@ -124,13 +125,19 @@ def askForDownload(videos):
     print "Which version you would like to download?"
     userInput = int(input("Give number between 1-" + str(len(videos)) + ": ")) - 1
     if (userInput < 0) or (userInput > len(videos)) :
-       print "You've gave wrong number. Bailing out. Bye!"
+       print "You've given wrong number. Bailing out. Bye!"
        return
     downloadVideo(getUrl(videos[userInput]), 'video.'+ getType(videos[userInput]))
 		
 
 
 if __name__ == '__main__':
-    videos = getVideos('http://www.youtube.com/watch?v=ALYateVoC7M')
+    if len(sys.argv) < 2 :
+        print "No parameter given"
+        print "Usage: " + sys.argv[0] + " linkToYouTubeVideo"
+        exit(1)
+    videoLink = sys.argv[1]
+    print "Will download video " + videoLink
+    videos = getVideos(videoLink)
     displayVideos(videos)
     askForDownload(videos)
