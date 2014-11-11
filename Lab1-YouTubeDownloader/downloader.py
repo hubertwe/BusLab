@@ -3,6 +3,7 @@
 import urlparse
 import urllib
 import re
+import sys
 
 def getFirstParam(videosString):
     return videosString.split('=')[0]
@@ -27,12 +28,16 @@ def getAdaptiveFmtsString(content):
 
 
 def getDecodedVideosString(content):
-    streamMap = getStremMapString(content)
+    streamMap = list()
+    try:
+        streamMap = getStremMapString(content)
+    except IndexError :
+        pass
     adaptiveFtms = getAdaptiveFmtsString(content)
     return streamMap + adaptiveFtms
 
 def getEncodedVideosString(content):
-    pass
+	pass
 
 def isValidUrl(parsedUrl):
     return 'title' not in parsedUrl
@@ -52,9 +57,14 @@ def getDecodedVideos(content):
 
 def getUrl(video):
     url = video['url'][0]
-    for param in video:
+    for param in dict(video):
         if param == 'type' or param == ' codecs' or param == 'quality' or param == 'fallback_host' or param == 'url':
             continue
+        if param == 's':
+            video['signature'] = list()
+            video['signature'].append(decodeSignature(video[param][0]))
+            del video['s']
+            param = 'signature'
         url += '&' + param + '=' + video[param][0]
     return url
 
@@ -81,15 +91,15 @@ def swap(signature, b):
     return sig
 
 def decodeSignature(signature):
+    print "Before conversion " + signature
     sig = list(signature)
     sig = splice(sig, 2)
+    sig = swap(sig, 38)
     sig = revers(sig)
-    sig = splice(sig, 3)
+    sig = splice(sig,3)
     sig = revers(sig)
-    sig = splice(sig, 3)
-    sig = revers(sig)
-    sig = swap(sig, 2)
     sig = ''.join(sig)
+    print "After conversion " + sig
     return sig
 
 def getType(video):
@@ -106,13 +116,13 @@ def displayVideos(videos):
             print 'Size: ' + video['size'][0]
         if ' codecs' in video:
             print 'Codecs: ' + video[' codecs'][0]
-        #print getUrl(video)
+        print getUrl(video)
         print ''
 
 def downloadVideo(link, name):
     print "Will download video and save as " + name
     file = urllib.URLopener()
-    file.addheaders = [("User-agent", "lla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko)")]
+    file.addheaders = [("User-agent", "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko)")]
     try: 
         file.retrieve(link, name)
 
@@ -124,13 +134,19 @@ def askForDownload(videos):
     print "Which version you would like to download?"
     userInput = int(input("Give number between 1-" + str(len(videos)) + ": ")) - 1
     if (userInput < 0) or (userInput > len(videos)) :
-       print "You've gave wrong number. Bailing out. Bye!"
+       print "You've given wrong number. Bailing out. Bye!"
        return
     downloadVideo(getUrl(videos[userInput]), 'video.'+ getType(videos[userInput]))
-		
+        
 
 
 if __name__ == '__main__':
-    videos = getVideos('http://www.youtube.com/watch?v=ALYateVoC7M')
+    if len(sys.argv) < 2 :
+        print "No parameter given"
+        print "Usage: " + sys.argv[0] + " linkToYouTubeVideo"
+        exit(1)
+    videoLink = sys.argv[1]
+    print "Will download video " + videoLink
+    videos = getVideos(videoLink)
     displayVideos(videos)
     askForDownload(videos)
