@@ -1,0 +1,626 @@
+
+Starting Nmap 5.00 ( http://nmap.org ) at 2012-10-23 11:57 CEST
+Warning: Giving up on port early because retransmission cap hit.
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.1):
+Not shown: 98 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+9100/tcp filtered jetdirect
+
+Nmap scan report for hop.ict.pwr.wroc.pl (156.17.40.2):
+Not shown: 89 closed ports
+PORT      STATE    SERVICE        VERSION
+21/tcp    open     tcpwrapped
+110/tcp   filtered pop3
+135/tcp   filtered msrpc
+993/tcp   filtered imaps
+1028/tcp  filtered unknown
+1723/tcp  filtered pptp
+2121/tcp  filtered ccproxy-ftp
+3306/tcp  filtered mysql
+5060/tcp  filtered sip
+8888/tcp  filtered sun-answerbook
+49156/tcp filtered unknown
+
+Nmap scan report for dyn-40-03.ict.pwr.wroc.pl (156.17.40.3):
+Not shown: 98 closed ports
+PORT    STATE SERVICE    VERSION
+21/tcp  open  tcpwrapped
+111/tcp open  rpcbind
+
+Nmap scan report for pump12.ict.pwr.wroc.pl (156.17.40.22):
+Not shown: 92 closed ports
+PORT     STATE    SERVICE    VERSION
+13/tcp   filtered daytime
+21/tcp   open     tcpwrapped
+22/tcp   open     ssh        OpenSSH 5.3p1 Debian 3ubuntu6 (protocol 2.0)
+111/tcp  open     rpcbind
+143/tcp  filtered imap
+389/tcp  open     ldap       OpenLDAP 2.2.X
+2049/tcp open     rpcbind
+3306/tcp filtered mysql
+Service Info: OS: Linux
+
+Nmap scan report for defect.ict.pwr.wroc.pl (156.17.40.27):
+Not shown: 87 closed ports
+PORT     STATE    SERVICE        VERSION
+7/tcp    open     echo?
+9/tcp    open     discard?
+13/tcp   open     daytime        Sun Solaris daytime
+21/tcp   open     ftp            Solaris ftpd
+22/tcp   open     ssh            SunSSH 1.0.1 (protocol 2.0)
+23/tcp   open     telnet         Sun Solaris telnetd
+37/tcp   open     time?
+79/tcp   open     finger         Sun Solaris fingerd
+111/tcp  open     rpcbind
+513/tcp  open     login
+514/tcp  open     tcpwrapped
+515/tcp  open     printer        Solaris lpd
+8888/tcp filtered sun-answerbook
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+SF-Port37-TCP:V=5.00%I=7%D=10/23%Time=50866A8E%P=i686-pc-linux-gnu%r(NULL,
+SF:4,"\xd40\xd9\x9a")%r(GenericLines,4,"\xd40\xd9\x9a")%r(GetRequest,4,"\x
+SF:d40\xd9\x9a")%r(HTTPOptions,4,"\xd40\xd9\x9a")%r(RTSPRequest,4,"\xd40\x
+SF:d9\x9a")%r(RPCCheck,4,"\xd40\xd9\x9a")%r(DNSVersionBindReq,4,"\xd40\xd9
+SF:\x9a")%r(DNSStatusRequest,4,"\xd40\xd9\x9a")%r(Help,4,"\xd40\xd9\x9a")%
+SF:r(SSLSessionReq,4,"\xd40\xd9\x9a")%r(SMBProgNeg,4,"\xd40\xd9\x9a")%r(X1
+SF:1Probe,4,"\xd40\xd9\x9a")%r(FourOhFourRequest,4,"\xd40\xd9\x9a")%r(LPDS
+SF:tring,4,"\xd40\xd9\x9a")%r(LDAPBindReq,4,"\xd40\xd9\x9a")%r(SIPOptions,
+SF:4,"\xd40\xd9\x9a")%r(LANDesk-RC,4,"\xd40\xd9\x9a")%r(TerminalServer,4,"
+SF:\xd40\xd9\x9a")%r(NCP,4,"\xd40\xd9\x9a")%r(NotesRPC,4,"\xd40\xd9\x9a")%
+SF:r(WMSRequest,4,"\xd40\xd9\x9a")%r(oracle-tns,4,"\xd40\xd9\x9a");
+Service Info: OS: Solaris
+
+Nmap scan report for lak.ict.pwr.wroc.pl (156.17.40.28):
+Not shown: 92 closed ports
+PORT     STATE SERVICE    VERSION
+21/tcp   open  tcpwrapped
+22/tcp   open  ssh        OpenSSH 5.3p1 Debian 3ubuntu6 (protocol 2.0)
+80/tcp   open  http       Apache httpd 2.2.14 ((Ubuntu))
+111/tcp  open  rpcbind
+389/tcp  open  ldap       OpenLDAP 2.2.X
+2049/tcp open  rpcbind
+3306/tcp open  mysql      MySQL 5.1.41-3ubuntu12.10
+5432/tcp open  postgresql PostgreSQL DB
+Service Info: OS: Linux
+
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.33):
+Not shown: 99 closed ports
+PORT   STATE SERVICE    VERSION
+21/tcp open  tcpwrapped
+
+Nmap scan report for 156.17.40.35:
+Not shown: 97 filtered ports
+PORT     STATE  SERVICE    VERSION
+21/tcp   open   ftp?
+443/tcp  open   skype2     Skype
+7070/tcp closed realserver
+
+Nmap scan report for 156.17.40.37:
+Not shown: 91 closed ports
+PORT     STATE    SERVICE         VERSION
+21/tcp   open     tcpwrapped
+80/tcp   open     http            HP Color LaserJet CM2320nf MFP printer http config (Virata httpd 6_2_1)
+139/tcp  open     tcpwrapped
+445/tcp  open     netbios-ssn
+515/tcp  open     printer
+5357/tcp filtered unknown
+8888/tcp open     sun-answerbook?
+9100/tcp open     jetdirect?
+9999/tcp filtered abyss
+Service Info: Device: printer
+
+Nmap scan report for 156.17.40.39:
+Not shown: 96 filtered ports
+PORT    STATE SERVICE    VERSION
+21/tcp  open  ftp?
+23/tcp  open  telnet     Cisco or Edge-core switch telnetd
+80/tcp  open  http       Generic router http config
+443/tcp open  ssl/https?
+Service Info: Devices: switch, router
+
+Nmap scan report for sekret1.ict.pwr.wroc.pl (156.17.40.43):
+Not shown: 93 closed ports
+PORT    STATE    SERVICE      VERSION
+21/tcp  open     tcpwrapped
+26/tcp  filtered rsftp
+80/tcp  open     http?
+135/tcp open     msrpc        Microsoft Windows RPC
+139/tcp open     netbios-ssn
+443/tcp open     skype2       Skype
+445/tcp open     microsoft-ds Microsoft Windows XP microsoft-ds
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+SF-Port80-TCP:V=5.00%I=7%D=10/23%Time=50866AA6%P=i686-pc-linux-gnu%r(GetRe
+SF:quest,1A,"HTTP/1\.0\x20404\x20Not\x20Found\r\n\r\n")%r(HTTPOptions,68,"
+SF:\xf6\x7fd\xd6E\xb9Y\xa0\xbf{\xa1\x1e\xb2\x82x3g\xc2e\xf5\|XT!\[W\x99Lj\
+SF:x95\xc3<\0\xa3\xd6x\)\xd1D{\xa5\xe2\x92\.\xb4\x17M\xc7}\x8a\xf3\x08\xd9
+SF:6\xaf\x94\xf5\xa2\+\xe0\xd1\xceg\xecm\xbac\xb8\xc9f\x1fD\xe5\xd2\x9b\x9
+SF:0\xc1\xfe\xd7\x9c\]\xea\xd3h\xb9\x96\x8f\xf4\xd5\x02\x0b@\xb1\.GLM\x1aC
+SF:\x18\xa9\xc6\xff\xa4")%r(RTSPRequest,5F,"z\x86\x1d\xac6\x18J`\x9d,hu\x1
+SF:0\xbdg\x19\xb3\xd0\xd5\xf3\x1a\x93P\xbe\x95\xfe\xc0\xa9=\xf9\xb1HI\xed\
+SF:xb9\xd4\xd1\x01\x86h\xcaG9\xf1\x95\x98>\xad\xff\xa4\xc52{\xf0\xa1\^\xb7
+SF:\xfc=J\xb3\xc8\x99\xf6oT\xb5b\xeb\xa0\x91\x8e'\xac-z#x\x89&\xdf\x04\xa5
+SF:\x92\[P\x81\xbe\x97\\\x1d\xaa\x93\(y")%r(FourOhFourRequest,1A,"HTTP/1\.
+SF:0\x20404\x20Not\x20Found\r\n\r\n")%r(RPCCheck,35,"\x8a\xdbTc\xce!I\xae#
+SF:\xd4\xd7\xb9\x9a4&\xce\xa7d\xad\xc9h\xa5\x95\xbc\xa1\x99\x0cE\xf7\xa2B\
+SF:xdd;\x9f\x15\xf1\xb7\^\x1d\xfd\x94\x9e\x88Z\xaf\r\xf4\xf6\xa6_\x84%\x12
+SF:")%r(DNSVersionBindReq,61,"\xcc\xbb%\xb1\xce\xe1`\x91\xcb\xc2q\x8a\xd5\
+SF:x17\xe9\xd6\x10\xf4}P\x20GE\xac\x81\x84\x93\(\xc5-y\x85\xd3\xe8\xcc\xa2
+SF:\.~/\xdbj\(\xbe\xdf\x95\x9e\xfa\xb6\x94\xf5\xa2\+\xe0\xd1\xceg\xecm\xba
+SF:c\xb8\xc9f\x1fD\xe5\xd2\x9b\x90\xc1\xfe\xd7\x9c\]\xea\xd3h\xb9\x96\x8f\
+SF:xf4\xd5\x02\x0b@\xb1\.GLM\x1aC\x18\xa9\xc6\xff\xa4")%r(DNSStatusRequest
+SF:,30,"\xb3\xbc\)5t\x8eD\xfb\xde\xd6\xf5\xaa\|\x93\x07#z\xb5\x9a\xf7\xe3\
+SF:x8e\xdao\xfe8\xfa!\x9d\x8b\xaa\xdc\x8dm\xffO\xde\xb7vLX\xfe\xaf\x96\x15
+SF:\x07\xeb@")%r(SSLSessionReq,6D,"\x05cd\xae\(\x9cc\xbe\xcf5\xf2u\xbaf\x1
+SF:1\x08\xae7\xa24T\x16\xa8R\xe4\x93\x06\|}\^O\xd0\x9e\xb0\[\x16\?C\x02f\x
+SF:ad\x08\xae\xea\x91,\xdbHw\xbc\xfd\ns\x88Y\xb6/\x14u\"\xab`QN\xe7l\xed:\
+SF:xe38I\xe6\x9f\xc4eR\x1b\x10A~W\x1c\xddjS\xe89\x16\x0ftU\x82\x8b\xc01\xa
+SF:e\xc7\xcc\xcd\x9a\xc3\x9f\x90\x97\xff}\xf1\xda\x94")%r(SMBProgNeg,59,"\
+SF:x8b\xc3utFJ#\xfe\xe5\x8d\xd3&`\x9a\x8d\xee\xca\xec&\xb5\xc7\x8bY\?\x1eB
+SF:\xd8\x9e\"\xac\xcci;\(\xa4r\xa1\xd7\x85\xa0\xf4T\xd2\xea\xd7\x93\x7f\x9
+SF:8T\xb5b\xeb\xa0\x91\x8e'\xac-z#x\x89&\xdf\x04\xa5\x92\[P\x81\xbe\x97\\\
+SF:x1d\xaa\x93\(yVO\xb4zd@\xeb\xa7L\x8c\x14");
+Service Info: OS: Windows
+
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.65):
+Not shown: 95 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+37/tcp   filtered time
+143/tcp  filtered imap
+8000/tcp filtered http-alt
+8008/tcp filtered http
+
+Nmap scan report for laptok.ict.pwr.wroc.pl (156.17.40.67):
+Not shown: 96 filtered ports
+PORT   STATE  SERVICE VERSION
+21/tcp open   ftp?
+22/tcp open   ssh     OpenSSH 5.5p1 Debian 4ubuntu6 (protocol 2.0)
+25/tcp closed smtp
+80/tcp closed http
+Service Info: OS: Linux
+
+Nmap scan report for chaos.ict.pwr.wroc.pl (156.17.40.71):
+Not shown: 99 closed ports
+PORT   STATE SERVICE    VERSION
+21/tcp open  tcpwrapped
+
+Nmap scan report for werewolf.ict.pwr.wroc.pl (156.17.40.90):
+Not shown: 86 closed ports
+PORT      STATE    SERVICE       VERSION
+21/tcp    open     tcpwrapped
+22/tcp    filtered ssh
+81/tcp    filtered hosts2-ns
+111/tcp   filtered rpcbind
+513/tcp   filtered login
+587/tcp   filtered submission
+1029/tcp  filtered ms-lsa
+1433/tcp  filtered ms-sql-s
+2717/tcp  filtered unknown
+5009/tcp  filtered airport-admin
+5190/tcp  filtered aol
+8008/tcp  filtered http
+32768/tcp filtered unknown
+49153/tcp filtered unknown
+
+Nmap scan report for hugin.ict.pwr.wroc.pl (156.17.40.91):
+Not shown: 95 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+22/tcp   filtered ssh
+37/tcp   filtered time
+53/tcp   open     domain     ISC BIND 8.2.1
+2717/tcp filtered unknown
+
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.97):
+Not shown: 99 closed ports
+PORT   STATE SERVICE    VERSION
+21/tcp open  tcpwrapped
+
+Nmap scan report for dyn-40-102.ict.pwr.wroc.pl (156.17.40.102):
+Not shown: 91 closed ports
+PORT     STATE    SERVICE      VERSION
+21/tcp   open     tcpwrapped
+135/tcp  filtered msrpc
+1026/tcp filtered LSA-or-nterm
+2000/tcp filtered callbook
+5051/tcp filtered ida-agent
+5101/tcp filtered admdog
+5666/tcp filtered nrpe
+8080/tcp filtered http-proxy
+8443/tcp filtered https-alt
+
+Nmap scan report for dyn-40-107.ict.pwr.wroc.pl (156.17.40.107):
+Not shown: 93 closed ports
+PORT      STATE    SERVICE        VERSION
+21/tcp    open     tcpwrapped
+548/tcp   filtered afp
+1026/tcp  filtered LSA-or-nterm
+6646/tcp  filtered unknown
+8443/tcp  filtered https-alt
+8888/tcp  filtered sun-answerbook
+49156/tcp filtered unknown
+
+Nmap scan report for dyn-40-123.ict.pwr.wroc.pl (156.17.40.123):
+Not shown: 98 filtered ports
+PORT    STATE SERVICE VERSION
+21/tcp  open  ftp?
+443/tcp open  skype2  Skype
+
+Nmap scan report for dyn-40-126.ict.pwr.wroc.pl (156.17.40.126):
+Not shown: 89 closed ports
+PORT     STATE    SERVICE        VERSION
+21/tcp   open     tcpwrapped
+135/tcp  open     msrpc          Microsoft Windows RPC
+139/tcp  open     netbios-ssn
+445/tcp  open     microsoft-ds   Microsoft Windows XP microsoft-ds
+993/tcp  filtered imaps
+1028/tcp filtered unknown
+1720/tcp filtered H.323/Q.931
+3128/tcp filtered squid-http
+8009/tcp filtered ajp13
+8080/tcp filtered http-proxy
+8888/tcp filtered sun-answerbook
+Service Info: OS: Windows
+
+Nmap scan report for hop.ict.pwr.wroc.pl (156.17.40.137):
+Not shown: 95 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+111/tcp  filtered rpcbind
+144/tcp  filtered news
+515/tcp  filtered printer
+1028/tcp filtered unknown
+
+Nmap scan report for 156.17.40.138:
+Not shown: 95 closed ports
+PORT     STATE    SERVICE         VERSION
+21/tcp   open     ftp
+80/tcp   open     http?
+631/tcp  filtered ipp
+8081/tcp filtered blackice-icecap
+8888/tcp filtered sun-answerbook
+2 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port21-TCP:V=5.00%I=7%D=10/23%Time=50866AFF%P=i686-pc-linux-gnu%r(NULL,
+SF:35,"220\x20CP\x20343-1\x20IT\x20FTP-Server\x20V1\.56\x20ready\x20for\x2
+SF:0new\x20user\r\n")%r(GenericLines,49,"220\x20CP\x20343-1\x20IT\x20FTP-S
+SF:erver\x20V1\.56\x20ready\x20for\x20new\x20user\r\n530\x20Not\x20logged\
+SF:x20in\.\r\n")%r(Help,1B5,"220\x20CP\x20343-1\x20IT\x20FTP-Server\x20V1\
+SF:.56\x20ready\x20for\x20new\x20user\r\n214-The\x20following\x20commands\
+SF:x20are\x20recognized\x20\(\*\x20=>'s\x20unimplemented\)\.\r\n\x20\x20\x
+SF:20\x20\x20USER\x20\x20\x20\x20PWD\x20\x20\x20\x20\x20LIST\x20\x20\x20\x
+SF:20RETR\x20\x20\x20\x20MODE\x20\x20\x20\x20REST\x20\x20\x20\x20APPE\r\n\
+SF:x20\x20\x20\x20\x20PASS\x20\x20\x20\x20MKD\x20\x20\x20\x20\x20NLST\x20\
+SF:x20\x20\x20STOR\x20\x20\x20\x20STRU\x20\x20\x20\x20ABOR\x20\x20\x20\x20
+SF:REIN\*\r\n\x20\x20\x20\x20\x20QUIT\x20\x20\x20\x20RMD\x20\x20\x20\x20\x
+SF:20RNFR\x20\x20\x20\x20PORT\x20\x20\x20\x20HELP\x20\x20\x20\x20NOOP\x20\
+SF:x20\x20\x20SITE\*\r\n\x20\x20\x20\x20\x20CWD\x20\x20\x20\x20\x20XMKD\x2
+SF:0\x20\x20\x20RNTO\x20\x20\x20\x20PASV\x20\x20\x20\x20STAT\x20\x20\x20\x
+SF:20ACCT\*\x20\x20\x20SMNT\*\r\n\x20\x20\x20\x20\x20CDUP\x20\x20\x20\x20X
+SF:RMD\x20\x20\x20\x20DELE\x20\x20\x20\x20TYPE\x20\x20\x20\x20SYST\x20\x20
+SF:\x20\x20ALLO\*\x20\x20\x20STOU\*\r\n214\x20End\x20of\x20help\.\r\n")%r(
+SF:SMBProgNeg,35,"220\x20CP\x20343-1\x20IT\x20FTP-Server\x20V1\.56\x20read
+SF:y\x20for\x20new\x20user\r\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port80-TCP:V=5.00%I=7%D=10/23%Time=50866B05%P=i686-pc-linux-gnu%r(GetRe
+SF:quest,27E,"HTTP/1\.0\x20302\r\nLocation:\x20/Portal0000\.htm\r\nPragma:
+SF:\x20no-cache\r\nContent-Type:\x20text/html\r\nContent-Length:\x20119\r\
+SF:n\r\n<!DOCTYPE\x20HTML\x20PUBLIC\x20\"-//W3C//DTD\x20HTML\x204\.01\x20T
+SF:ransitional//EN\">\r\n<html><head><title>Error</title>\r\n<meta\x20http
+SF:-equiv=\"content-type\"\x20content=\"text/html;\x20charset=UTF-8\">\r\n
+SF:<link\x20rel=\"stylesheet\"\x20type=\"text/css\"\x20href=\"/S7Web\.css\
+SF:">\r\n</head>\r\n<body\x20class=\"ContentLongBody\"><center><table\x20s
+SF:ummary=\"ErrorText\"\x20cellspacing=\"0\"\x20cellpadding=\"0\"\x20width
+SF:=\"100%\">\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn_2\">/</t
+SF:d>\r\n</tr>\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn_2\">\x2
+SF:0302\x20:\x20MOVED\x20TEMPORARILY\x20</td>\r\n</tr>\r\n</table>\r\n</ce
+SF:nter>\r\n</body>\r\n</html>")%r(HTTPOptions,261,"HTTP/1\.0\x20501\r\nPr
+SF:agma:\x20no-cache\r\nContent-Type:\x20text/html\r\nContent-Length:\x201
+SF:17\r\n\r\n<!DOCTYPE\x20HTML\x20PUBLIC\x20\"-//W3C//DTD\x20HTML\x204\.01
+SF:\x20Transitional//EN\">\r\n<html><head><title>Error</title>\r\n<meta\x2
+SF:0http-equiv=\"content-type\"\x20content=\"text/html;\x20charset=UTF-8\"
+SF:>\r\n<link\x20rel=\"stylesheet\"\x20type=\"text/css\"\x20href=\"/S7Web\
+SF:.css\">\r\n</head>\r\n<body\x20class=\"ContentLongBody\"><center><table
+SF:\x20summary=\"ErrorText\"\x20cellspacing=\"0\"\x20cellpadding=\"0\"\x20
+SF:width=\"100%\">\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn_2\"
+SF:>/</td>\r\n</tr>\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn_2\
+SF:">\x20501\x20:\x20NOT\x20IMPLEMENTED\x20</td>\r\n</tr>\r\n</table>\r\n<
+SF:/center>\r\n</body>\r\n</html>")%r(RTSPRequest,261,"HTTP/1\.0\x20501\r\
+SF:nPragma:\x20no-cache\r\nContent-Type:\x20text/html\r\nContent-Length:\x
+SF:20117\r\n\r\n<!DOCTYPE\x20HTML\x20PUBLIC\x20\"-//W3C//DTD\x20HTML\x204\
+SF:.01\x20Transitional//EN\">\r\n<html><head><title>Error</title>\r\n<meta
+SF:\x20http-equiv=\"content-type\"\x20content=\"text/html;\x20charset=UTF-
+SF:8\">\r\n<link\x20rel=\"stylesheet\"\x20type=\"text/css\"\x20href=\"/S7W
+SF:eb\.css\">\r\n</head>\r\n<body\x20class=\"ContentLongBody\"><center><ta
+SF:ble\x20summary=\"ErrorText\"\x20cellspacing=\"0\"\x20cellpadding=\"0\"\
+SF:x20width=\"100%\">\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn_
+SF:2\">/</td>\r\n</tr>\r\n<tr>\r\n<td\x20class=\"static_field_headline_dyn
+SF:_2\">\x20501\x20:\x20NOT\x20IMPLEMENTED\x20</td>\r\n</tr>\r\n</table>\r
+SF:\n</center>\r\n</body>\r\n</html>");
+Service Info: Host: CP
+
+Nmap scan report for 156.17.40.140:
+Not shown: 97 closed ports
+PORT     STATE    SERVICE VERSION
+21/tcp   open     ftp
+80/tcp   open     http?
+2001/tcp filtered dc
+2 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port21-TCP:V=5.00%I=7%D=10/23%Time=50866B0B%P=i686-pc-linux-gnu%r(NULL,
+SF:22,"220\x20CP243-1\x20IT\x20FTP\x20server\x20ready\.\r\n")%r(GenericLin
+SF:es,5A,"220\x20CP243-1\x20IT\x20FTP\x20server\x20ready\.\r\n530\x20USER\
+SF:x20and\x20PASS\x20required\r\n530\x20USER\x20and\x20PASS\x20required\r\
+SF:n")%r(Help,7B0,"220\x20CP243-1\x20IT\x20FTP\x20server\x20ready\.\r\n214
+SF:-The\x20following\x20commands\x20are\x20recognized:\r\n\nHELP\x20\x20Pr
+SF:int\x20of\x20supported\x20commands\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20Syntax:\x20HELP\nUSER\x20\x20Set\x20login\x20user\x20name\x2
+SF:0\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20Syntax:\x20USER\x20<user>\nPASS\x20\x20Set\x20login\x20password\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20Syntax:\x20PASS\x20<password>\nQUIT\x20\x20Quit\x20session\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20Syntax:\x20QUIT\n\nLIST\x20\x20List\
+SF:x20the\x20current\x20directory\x20\(long\)\x20\x20\x20\x20\x20\x20Synta
+SF:x:\x20LIST\nNLST\x20\x20List\x20the\x20current\x20directory\x20\(short\
+SF:)\x20\x20\x20\x20\x20Syntax:\x20NLST\nCDUP\x20\x20Change\x20to\x20paren
+SF:t\x20directory\x20\(CWD\x20\.\.\)\x20\x20\x20\x20Syntax:\x20CDUP\nXCUP\
+SF:x20\x20Change\x20to\x20parent\x20directory\x20\(XCWD\x20\.\.\)\x20\x20\
+SF:x20Syntax:\x20XCUP\nCWD\x20\x20\x20Change\x20working\x20directory\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Syntax:\x20CWD\x2
+SF:0\x20<directory>\nXCWD\x20\x20Change\x20working\x20directory\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Syntax:\x20XCWD\x20<di
+SF:rectory>\nPWD\x20\x20\x20Get\x20name\x20of\x20current\x20working\x20dir
+SF:ectory\x20\x20Syntax:\x20PWD\nXPWD\x20\x20Get\x20name\x20of\x20current\
+SF:x20working\x20directory\x20\x20Syntax:\x20XPWD\n\nRETR\x20\x20Get\x20a\
+SF:x20file\x20from\x20file\x20system\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20Syntax:\x20RETR\x20<file>\nSTOR\x20\x20Put\x20a\x20file\x20")
+SF:%r(SMBProgNeg,22,"220\x20CP243-1\x20IT\x20FTP\x20server\x20ready\.\r\n"
+SF:);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port80-TCP:V=5.00%I=7%D=10/23%Time=50866B0B%P=i686-pc-linux-gnu%r(GetRe
+SF:quest,609,"HTTP/1\.1\x20200\x20OK\r\nServer:\x20CP243-1\x20IT\r\nConnec
+SF:tion:\x20close\r\nContent-Type:\x20text/html\r\nWWW-Authenticate:\x20Ba
+SF:sic\x20realm=\"Login\"\r\nContent-Length:\x201328\r\nDate:\x20MON\x20MA
+SF:R\x2011\x2016:03:32\x201991\r\nLast-Modified:\x20MON\x20MAR\x2011\x2016
+SF::03:32\x201991\r\n\r\n<!doctype\x20html\x20public\x20\"-//W3C//DTD\x20H
+SF:TML\x204\.01\x20Frameset//EN\">\r\n\r\n<html>\r\n\r\n<head>\r\n<meta\x2
+SF:0http-equiv=\"Content-Type\"\x20content=\"text/html;\x20charset=iso-885
+SF:9-1\">\r\n<title>CP\x20243-1\x20IT</title>\r\n</head>\r\n\r\n<frameset\
+SF:x20cols=\"144,\*\"\x20border=\"0\">\r\n\x20\x20<frameset\x20rows=\"94,5
+SF:4,\*\">\r\n\x20\x20\x20\x20<frame\x20name=\"Inhalt1\"\x20scrolling=\"no
+SF:\"\x20marginheight=\"0\"\x20marginwidth=\"0\"\x20noresize\x20src=\"exam
+SF:ples/visual_key\.htm\">\r\n\x20\x20\x20\x20<frame\x20name=\"Inhalt2\"\x
+SF:20scrolling=\"no\"\x20marginheight=\"0\"\x20marginwidth=\"0\"\x20noresi
+SF:ze\x20src=\"examples/identifier\.htm\">\r\n\x20\x20\x20\x20<frame\x20na
+SF:me=\"Inhalt3\"\x20scrolling=\"no\"\x20marginheight=\"0\"\x20marginwidth
+SF:=\"0\"\x20noresize\x20src=\"examples/navigation\.htm\">\r\n\x20\x20</fr
+SF:ameset>\r\n\x20\x20<frameset\x20rows=\"58,36,\*\">\r\n\x20\x20\x20\x20<
+SF:frame\x20name=\"Hauptframe\"\x20scroll")%r(HTTPOptions,13C,"HTTP/1\.1\x
+SF:20501\x20Not\x20Implemented\r\nServer:\x20CP243-1\x20IT\r\nConnection:\
+SF:x20close\r\nWWW-Authenticate:\x20Basic\x20realm=\"Login\"\r\nContent-Ty
+SF:pe:\x20text/html\r\n\r\nCP243-1\x20IT\x20Webserver\x20Error\x20Report:<
+SF:HR>\n<H1>Server\x20Error:\x20501\x20Not\x20Implemented</H1>\r\n<P><HR><
+SF:H2>No\x20RPM\x20for\x20this\x20combination\x20of\x20URL\x20and\x20metho
+SF:d</H2><P><P><HR><H1>/index\.htm</H1><P><HR>\n")%r(RTSPRequest,13C,"HTTP
+SF:/1\.1\x20501\x20Not\x20Implemented\r\nServer:\x20CP243-1\x20IT\r\nConne
+SF:ction:\x20close\r\nWWW-Authenticate:\x20Basic\x20realm=\"Login\"\r\nCon
+SF:tent-Type:\x20text/html\r\n\r\nCP243-1\x20IT\x20Webserver\x20Error\x20R
+SF:eport:<HR>\n<H1>Server\x20Error:\x20501\x20Not\x20Implemented</H1>\r\n<
+SF:P><HR><H2>No\x20RPM\x20for\x20this\x20combination\x20of\x20URL\x20and\x
+SF:20method</H2><P><P><HR><H1>/index\.htm</H1><P><HR>\n");
+Service Info: Host: CP243-1
+
+Nmap scan report for hop.ict.pwr.wroc.pl (156.17.40.145):
+Not shown: 98 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+8443/tcp filtered https-alt
+
+Nmap scan report for swing.ict.pwr.wroc.pl (156.17.40.148):
+Not shown: 92 filtered ports
+PORT     STATE  SERVICE     VERSION
+22/tcp   open   ssh         OpenSSH 5.5p1 Debian 6+squeeze2 (protocol 2.0)
+25/tcp   open   smtp        Exim smtpd 4.72
+80/tcp   open   http        Apache httpd 2.2.16
+113/tcp  closed auth
+143/tcp  open   imap        Courier Imapd (released 2010)
+445/tcp  open   netbios-ssn Samba smbd 3.X (workgroup: ZSJPW)
+631/tcp  closed ipp
+8080/tcp closed http-proxy
+Service Info: OS: Linux
+
+Nmap scan report for snow.ict.pwr.wroc.pl (156.17.40.149):
+Not shown: 95 filtered ports
+PORT     STATE  SERVICE    VERSION
+22/tcp   closed ssh
+5800/tcp closed vnc-http
+5900/tcp open   vnc        VNC (protocol 3.8)
+6001/tcp closed X11:1
+8080/tcp closed http-proxy
+
+Nmap scan report for zsd215.ict.pwr.wroc.pl (156.17.40.150):
+Not shown: 96 filtered ports
+PORT    STATE  SERVICE      VERSION
+21/tcp  open   ftp?
+113/tcp closed auth
+139/tcp open   netbios-ssn?
+554/tcp closed rtsp
+
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.161):
+Not shown: 92 closed ports
+PORT     STATE    SERVICE       VERSION
+21/tcp   open     tcpwrapped
+444/tcp  filtered snpp
+1027/tcp filtered IIS
+1029/tcp filtered ms-lsa
+1433/tcp filtered ms-sql-s
+5009/tcp filtered airport-admin
+5190/tcp filtered aol
+8000/tcp filtered http-alt
+
+Nmap scan report for gromit.ict.pwr.wroc.pl (156.17.40.162):
+Not shown: 83 closed ports
+PORT     STATE    SERVICE     VERSION
+21/tcp   open     tcpwrapped
+22/tcp   open     ssh         OpenSSH 5.5p1 Debian 6+squeeze2 (protocol 2.0)
+25/tcp   open     smtp        Exim smtpd 4.72
+79/tcp   open     finger?
+80/tcp   open     http        Apache httpd
+111/tcp  open     rpcbind
+113/tcp  open     ident
+139/tcp  open     netbios-ssn Samba smbd 3.X (workgroup: LAB-05-C3)
+389/tcp  open     ldap        OpenLDAP 2.2.X
+443/tcp  open     ssl/http    Apache httpd
+445/tcp  open     netbios-ssn Samba smbd 3.X (workgroup: LAB-05-C3)
+548/tcp  open     afp?
+993/tcp  open     ssl/imap    Dovecot imapd
+995/tcp  open     pop3s?
+2049/tcp open     rpcbind
+4899/tcp filtered radmin
+9999/tcp filtered abyss
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+SF-Port79-TCP:V=5.00%I=7%D=10/23%Time=50866B16%P=i686-pc-linux-gnu%r(Gener
+SF:icLines,13,"No\x20one\x20logged\x20on\.\r\n")%r(GetRequest,57,"finger:\
+SF:x20/:\x20no\x20such\x20user\.\r\nfinger:\x20HTTP/1\.0:\x20no\x20such\x2
+SF:0user\.\r\nfinger:\x20GET:\x20no\x20such\x20user\.\r\n")%r(Help,1D,"fin
+SF:ger:\x20HELP:\x20no\x20such\x20user\.\r\n")%r(HTTPOptions,5B,"finger:\x
+SF:20/:\x20no\x20such\x20user\.\r\nfinger:\x20OPTIONS:\x20no\x20such\x20us
+SF:er\.\r\nfinger:\x20HTTP/1\.0:\x20no\x20such\x20user\.\r\n")%r(RTSPReque
+SF:st,5B,"finger:\x20/:\x20no\x20such\x20user\.\r\nfinger:\x20RTSP/1\.0:\x
+SF:20no\x20such\x20user\.\r\nfinger:\x20OPTIONS:\x20no\x20such\x20user\.\r
+SF:\n")%r(SSLSessionReq,1D,"finger:\x20\^V\^C:\x20no\x20such\x20user\.\r\n
+SF:");
+Service Info: OS: Linux
+
+Nmap scan report for hip.ict.pwr.wroc.pl (156.17.40.193):
+Not shown: 94 closed ports
+PORT     STATE    SERVICE     VERSION
+21/tcp   open     tcpwrapped
+80/tcp   filtered http
+110/tcp  filtered pop3
+1110/tcp filtered nfsd-status
+2717/tcp filtered unknown
+5900/tcp filtered vnc
+
+Nmap scan report for dyn-40-203.ict.pwr.wroc.pl (156.17.40.203):
+Not shown: 97 closed ports
+PORT    STATE SERVICE     VERSION
+21/tcp  open  tcpwrapped
+135/tcp open  msrpc       Microsoft Windows RPC
+139/tcp open  netbios-ssn
+Service Info: OS: Windows
+
+Nmap scan report for dyn-40-209.ict.pwr.wroc.pl (156.17.40.209):
+Not shown: 91 closed ports
+PORT      STATE    SERVICE    VERSION
+21/tcp    filtered ftp
+80/tcp    open     http       HP LaserJet 3052 printer http config (Virata httpd 6_0_1)
+444/tcp   filtered snpp
+515/tcp   open     printer?
+548/tcp   filtered afp
+6646/tcp  filtered unknown
+8009/tcp  filtered ajp13
+9100/tcp  open     jetdirect?
+49152/tcp filtered unknown
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+SF-Port515-TCP:V=5.00%I=7%D=10/23%Time=50866B2E%P=i686-pc-linux-gnu%r(GetR
+SF:equest,1,"\0");
+Service Info: Device: printer
+
+Nmap scan report for dyn-40-217.ict.pwr.wroc.pl (156.17.40.217):
+Not shown: 91 closed ports
+PORT     STATE    SERVICE     VERSION
+21/tcp   open     tcpwrapped
+22/tcp   open     ssh         OpenSSH 3.8.1p1 Debian 8.sarge.4 (protocol 2.0)
+80/tcp   open     http        GoAhead-Webs embedded httpd
+111/tcp  open     rpcbind
+427/tcp  filtered svrloc
+443/tcp  open     ssl/http    GoAhead-Webs embedded httpd
+544/tcp  filtered kshell
+2121/tcp filtered ccproxy-ftp
+4899/tcp filtered radmin
+Service Info: OS: Linux
+
+Nmap scan report for blade.eka.pwr.wroc.pl (156.17.40.227):
+Not shown: 94 filtered ports
+PORT     STATE  SERVICE VERSION
+21/tcp   open   ftp?
+80/tcp   open   http    Apache httpd 2.0.59 ((Unix) DAV/2 PHP/5.2.1)
+111/tcp  open   rpcbind
+443/tcp  closed https
+2049/tcp closed nfs
+8009/tcp closed ajp13
+
+Nmap scan report for oak11.eka.pwr.wroc.pl (156.17.40.241):
+Not shown: 88 closed ports
+PORT     STATE    SERVICE    VERSION
+21/tcp   open     tcpwrapped
+22/tcp   open     ssh        OpenSSH 4.7p1 Debian 8ubuntu1.2 (protocol 2.0)
+25/tcp   filtered smtp
+80/tcp   filtered http
+111/tcp  open     rpcbind
+143/tcp  filtered imap
+548/tcp  filtered afp
+2049/tcp open     rpcbind
+3306/tcp filtered mysql
+5900/tcp open     vnc        VNC (protocol 3.8)
+6646/tcp filtered unknown
+8009/tcp filtered ajp13
+Service Info: OS: Linux
+
+Nmap scan report for oak20.eka.pwr.wroc.pl (156.17.40.250):
+Not shown: 92 closed ports
+PORT     STATE    SERVICE      VERSION
+21/tcp   open     ftp          Brother/HP printer ftpd 1.10
+23/tcp   open     telnet?
+25/tcp   filtered smtp
+80/tcp   open     http?
+139/tcp  open     netbios-ssn?
+515/tcp  open     printer?
+631/tcp  open     ipp?
+9100/tcp filtered jetdirect
+Service Info: Device: printer
+
+Nmap scan report for actina.eka.pwr.wroc.pl (156.17.40.251):
+Not shown: 92 closed ports
+PORT     STATE    SERVICE         VERSION
+21/tcp   open     ftp?
+22/tcp   open     tcpwrapped
+25/tcp   filtered smtp
+53/tcp   open     domain          ISC BIND 9.7.0-P1
+80/tcp   open     http?
+5432/tcp open     postgresql?
+8000/tcp open     http-alt?
+8888/tcp open     sun-answerbook?
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at http://www.insecure.org/cgi-bin/servicefp-submit.cgi :
+SF-Port8888-TCP:V=5.00%I=7%D=10/23%Time=50866B41%P=i686-pc-linux-gnu%r(NUL
+SF:L,2A0,"HTTP/1\.0\x20403\x20Access\x20denied\r\nServer:\x20tinyproxy/1\.
+SF:8\.1\r\nContent-Type:\x20text/html\r\nConnection:\x20close\r\n\r\n<\?xm
+SF:l\x20version=\"1\.0\"\x20encoding=\"UTF-8\"\x20\?>\n<!DOCTYPE\x20html\x
+SF:20PUBLIC\x20\"-//W3C//DTD\x20XHTML\x201\.1//EN\"\x20\"http://www\.w3\.o
+SF:rg/TR/xhtml11/DTD/xhtml11\.dtd\">\n\n<html\x20xmlns=\"http://www\.w3\.o
+SF:rg/1999/xhtml\"\x20xml:lang=\"en\">\n\n<head>\n<title>403\x20Access\x20
+SF:denied</title>\n<meta\x20http-equiv=\"Content-Type\"\x20content=\"text/
+SF:html;\x20charset=UTF-8\"\x20/>\n</head>\n\n<body>\n\n<h1>Access\x20deni
+SF:ed</h1>\n\n<p>The\x20administrator\x20of\x20this\x20proxy\x20has\x20not
+SF:\x20configured\x20it\x20to\x20service\x20requests\x20from\x20your\x20ho
+SF:st\.</p>\n\n<hr\x20/>\n\n<p><em>Generated\x20by\x20<a\x20href=\"https:/
+SF:/www\.banu\.com/tinyproxy/\">tinyproxy</a>\x20version\x201\.8\.1\.</em>
+SF:</p>\n\n</body>\n\n</html>\n");
+
+Nmap scan report for perezoso.eka.pwr.wroc.pl (156.17.40.253):
+Not shown: 92 closed ports
+PORT     STATE    SERVICE       VERSION
+21/tcp   open     ftp?
+22/tcp   open     ssh?
+25/tcp   filtered smtp
+53/tcp   open     domain?
+88/tcp   open     kerberos-sec?
+111/tcp  open     rpcbind?
+113/tcp  open     auth?
+2049/tcp open     nfs?
+
+Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 256 IP addresses (39 hosts up) scanned in 331.12 seconds
