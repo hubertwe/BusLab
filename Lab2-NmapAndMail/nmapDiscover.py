@@ -102,7 +102,7 @@ def printHelp():
 	print "Usage: " + bcolors.GREEN + sys.argv[0] + bcolors.END + " ipRange portsRange [sim]"
 	print "\t\t ipRange\t - range of ip adresses to be scanned"
 	print "\t\t portsRange\t - range of ports to be scanned on every host"
-	print "\t\t sim\t\t - [optional] read Nmap results from instead of running real one (for testing purposes)" 
+	print "\t\t sim\t\t - [optional] read Nmap results from file instead of running real one (for testing purposes)" 
 
 
 if __name__ == '__main__':
