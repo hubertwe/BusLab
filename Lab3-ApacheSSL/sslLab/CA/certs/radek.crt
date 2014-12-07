@@ -1,0 +1,62 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4662 (0x1236)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=PL, ST=dolnoslaskie, L=Wroclaw, O=Pwr, OU=BusLab, CN=BusLab/emailAddress=184792@student.pwr.wroc.pl
+        Validity
+            Not Before: Nov 12 16:57:28 2014 GMT
+            Not After : Nov 12 16:57:28 2015 GMT
+        Subject: C=PL, ST=mazowieckie, L=Radom, O=Pwr, OU=Radek, CN=Radek/emailAddress=radek@radek.pl
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (1024 bit)
+                Modulus:
+                    00:b6:45:ad:c0:d1:ae:b8:52:3f:fb:e7:14:fa:d8:
+                    6f:a9:23:59:71:95:f6:d3:99:f7:65:81:4b:2f:7c:
+                    5e:10:f4:90:f2:d5:7c:ca:88:f8:7d:20:d7:10:e4:
+                    69:3e:19:8c:0f:6e:8f:e0:5f:49:22:e1:6c:7d:7d:
+                    a8:ba:a4:2c:49:d5:54:8b:20:c4:e3:88:9e:f4:5d:
+                    2b:00:01:d9:6f:6e:d0:f4:d1:0c:f3:58:17:e5:e4:
+                    c7:2a:fa:55:74:17:78:11:e7:6c:e2:07:80:c0:6e:
+                    b7:5f:1e:0e:7d:6e:0a:9c:fb:98:10:5f:11:7e:73:
+                    53:92:10:d1:85:54:1e:cb:f5
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                54:E1:92:E4:D4:92:A1:A4:08:41:D1:A5:A5:96:B6:9B:BB:15:48:B2
+            X509v3 Authority Key Identifier: 
+                keyid:2B:A0:AA:7D:B8:98:42:9B:E7:93:3A:6E:AF:64:64:7C:4A:8C:DF:47
+
+    Signature Algorithm: sha1WithRSAEncryption
+         9d:45:23:2b:c0:0f:0e:00:d6:58:73:2d:85:f5:09:60:41:b6:
+         e1:28:33:5e:d1:f9:bc:fb:6a:1c:d2:95:3a:a1:48:05:31:30:
+         7a:af:bf:99:c0:0d:cd:eb:22:ab:e3:d9:51:ce:25:cc:e1:69:
+         87:ee:7e:ec:48:08:b0:02:b3:65:87:2f:c8:c6:58:11:cc:ba:
+         88:22:1d:02:4d:36:08:e3:cc:f3:6a:07:5a:09:44:58:43:fb:
+         89:4a:27:bc:9f:02:13:4d:b2:1c:e2:a0:fa:b1:d4:38:0d:9d:
+         e4:eb:41:11:6f:3d:71:c9:e0:65:a5:81:b0:a3:27:10:42:44:
+         1c:02
+-----BEGIN CERTIFICATE-----
+MIIDBTCCAm6gAwIBAgICEjYwDQYJKoZIhvcNAQEFBQAwgZExCzAJBgNVBAYTAlBM
+MRUwEwYDVQQIDAxkb2xub3NsYXNraWUxEDAOBgNVBAcMB1dyb2NsYXcxDDAKBgNV
+BAoMA1B3cjEPMA0GA1UECwwGQnVzTGFiMQ8wDQYDVQQDDAZCdXNMYWIxKTAnBgkq
+hkiG9w0BCQEWGjE4NDc5MkBzdHVkZW50LnB3ci53cm9jLnBsMB4XDTE0MTExMjE2
+NTcyOFoXDTE1MTExMjE2NTcyOFowgYAxCzAJBgNVBAYTAlBMMRQwEgYDVQQIDAtt
+YXpvd2llY2tpZTEOMAwGA1UEBwwFUmFkb20xDDAKBgNVBAoMA1B3cjEOMAwGA1UE
+CwwFUmFkZWsxDjAMBgNVBAMMBVJhZGVrMR0wGwYJKoZIhvcNAQkBFg5yYWRla0By
+YWRlay5wbDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAtkWtwNGuuFI/++cU
++thvqSNZcZX205n3ZYFLL3xeEPSQ8tV8yoj4fSDXEORpPhmMD26P4F9JIuFsfX2o
+uqQsSdVUiyDE44ie9F0rAAHZb27Q9NEM81gX5eTHKvpVdBd4Eeds4geAwG63Xx4O
+fW4KnPuYEF8RfnNTkhDRhVQey/UCAwEAAaN7MHkwCQYDVR0TBAIwADAsBglghkgB
+hvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYE
+FFThkuTUkqGkCEHRpaWWtpu7FUiyMB8GA1UdIwQYMBaAFCugqn24mEKb55M6bq9k
+ZHxKjN9HMA0GCSqGSIb3DQEBBQUAA4GBAJ1FIyvADw4A1lhzLYX1CWBBtuEoM17R
++bz7ahzSlTqhSAUxMHqvv5nADc3rIqvj2VHOJczhaYfufuxICLACs2WHL8jGWBHM
+uogiHQJNNgjjzPNqB1oJRFhD+4lKJ7yfAhNNshzioPqx1DgNneTrQRFvPXHJ4GWl
+gbCjJxBCRBwC
+-----END CERTIFICATE-----
