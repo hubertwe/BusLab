@@ -30,7 +30,7 @@ public:
         	ERR_print_errors_fp(stderr);
     	else
     	{  
-    		handlerConnection();
+    		handleConnection();
 		}
 
 		SSL_free(ssl_);
@@ -124,16 +124,21 @@ private:
 	        printf("No certificates.\n");
 	}
 
-	void handlerConnection()
+	void handleConnection()
 	{
 		printf("Connected with %s encryption\n", SSL_get_cipher(ssl_));
         showCerts(ssl_);
-        Message msgSend(Message::REGISTER_REQ, 1, "Hi Server!");  
-        SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
-        Message serverResp; 
-        bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
-		serverResp.deserialize();
-		std::cout << "Server message:\t" << serverResp << std::endl;  
+        while(1)
+        {
+        	std::string msgText;
+        	std::getline(std::cin, msgText);
+        	Message msgSend(Message::REGISTER_REQ, 1, msgText.c_str());  
+        	SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
+        	Message serverResp; 
+        	bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
+			serverResp.deserialize();
+			std::cout << "Server message:\t" << serverResp << std::endl; 	
+		}
 	}
 
 	SSL_CTX *clientContext_;

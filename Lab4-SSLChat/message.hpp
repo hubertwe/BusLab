@@ -12,7 +12,9 @@ public:
 		TEXT_MSG,
 		TEXT_MSG_RESP,
 		BROADCAST_MSG,
-		BROADCAST_MSG_RESP
+		BROADCAST_MSG_RESP,
+		CLIENT_CONN_IND,
+		CLIENT_LOST_IND
 	};
 
 	Message(Type type, int dest, const char* payload)
@@ -23,8 +25,7 @@ public:
 	}
 
 	Message()
-	{
-	}
+	{ }
 
 	friend std::ostream& operator<<(std::ostream& out, const Message& m) 
 	{
@@ -51,7 +52,6 @@ public:
 		serializeToBuffer(serialized_);
 		return serialized_;
 	}
-
 
 	void deserializeFromBuffer(char* buffer)
 	{

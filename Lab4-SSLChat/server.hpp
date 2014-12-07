@@ -59,10 +59,10 @@ private:
 
         while(true)
         {
-            temporartSet_ = clientsSet_;
-            select(maximumClientDescriptor_+1, &temporartSet_, NULL, NULL, NULL);
+            temporarySet_ = clientsSet_;
+            select(maximumClientDescriptor_+1, &temporarySet_, NULL, NULL, NULL);
 
-            if(FD_ISSET(listener_, &temporartSet_))
+            if(FD_ISSET(listener_, &temporarySet_))
             {
                 std::cout << "New client connection..." << std::endl;
                 struct sockaddr_in addr;
@@ -70,8 +70,14 @@ private:
                 SSL *ssl;
 
                 int client = accept(listener_, (struct sockaddr*)&addr, &len);  
-                ssl = SSL_new(serverContext_);           
+                ssl = SSL_new(serverContext_);  
+
                 SSL_set_fd(ssl, client);
+
+                if ( SSL_accept(ssl) == FAIL )
+                {
+                    ERR_print_errors_fp(stderr);
+                }
 
                 ClientDesc desc;
                 desc.descriptor = client;
@@ -84,7 +90,10 @@ private:
 
             for (auto client : clientDescriptors_)
             {
-                if(FD_ISSET(client.descriptor, &clientsSet_))
+                temporarySet_ = clientsSet_;
+                select(maximumClientDescriptor_+1, &temporarySet_, NULL, NULL, NULL);
+                //std::cout << "Checking client: " << client.descriptor << std::endl;
+                if(FD_ISSET(client.descriptor, &temporarySet_))
                 {
                     serveClient(client);
                 }
@@ -94,39 +103,35 @@ private:
 
     void serveClient(ClientDesc client)
     {   
+        std::cout << "serveClient "<< client.descriptor << " method" << std::endl;
         SSL* ssl;
         ssl = client.ssl;
         int socket, bytes;
+        Message req;
 
-        if ( SSL_accept(ssl) == FAIL )
+        bytes = SSL_read(ssl, req.getBuffer(), req.getMessageSize());
+        req.deserialize();
+        if ( bytes > 0 )
         {
-            ERR_print_errors_fp(stderr);
+            std::cout << "==================================" << std::endl;
+            std::cout << bytes << " bytes received" << std::endl;
+            std::cout << "Client message:\t" << req << std::endl;
+            std::cout << "Client id:\t" << client.descriptor <<std::endl;
+
+            Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
+            SSL_write(ssl, resp.serialize(), resp.getMessageSize());
         }
         else
         {
-            Message req;
-            bytes = SSL_read(ssl, req.getBuffer(), req.getMessageSize());
-            req.deserialize();
-            if ( bytes > 0 )
-            {
-                std::cout << bytes << "bytes received" << std::endl;
-                std::cout << "Message size bytes " << req.getMessageSize() << std::endl;
-                std::cout << "Client message:\t" << req << std::endl;
-
-                Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
-                SSL_write(ssl, resp.serialize(), resp.getMessageSize());
-            }
-            else
-            {
-                ERR_print_errors_fp(stderr);
-            }
+            ERR_print_errors_fp(stderr);
         }
 
-        socket = SSL_get_fd(ssl);     
-        SSL_free(ssl);   
-        close(socket); 
-        FD_CLR(client.descriptor, &clientsSet_);
-        clientDescriptors_.erase(std::remove(clientDescriptors_.begin(), clientDescriptors_.end(), client), clientDescriptors_.end());
+
+        //socket = SSL_get_fd(ssl);     
+        //SSL_free(ssl);   
+        //close(socket); 
+        //FD_CLR(client.descriptor, &clientsSet_);
+        //clientDescriptors_.erase(std::remove(clientDescriptors_.begin(), clientDescriptors_.end(), client), clientDescriptors_.end());
 
     }
 
@@ -205,7 +210,7 @@ private:
     SSL_CTX *serverContext_;
     int listener_;
     int maximumClientDescriptor_;
-    fd_set temporartSet_;
+    fd_set temporarySet_;
     fd_set clientsSet_;
     std::vector<ClientDesc> clientDescriptors_;
     std::string certFile_;
