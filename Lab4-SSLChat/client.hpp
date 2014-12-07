@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include "message.hpp"
 
 #define FAIL    -1
 
@@ -31,7 +32,7 @@ public:
     	{  
     		handlerConnection();
 		}
-		
+
 		SSL_free(ssl_);
 		close(serverDescriptor_);
     	SSL_CTX_free(clientContext_);
@@ -125,14 +126,14 @@ private:
 
 	void handlerConnection()
 	{
-		std::string msg= "Hi Server!";
-
 		printf("Connected with %s encryption\n", SSL_get_cipher(ssl_));
-        showCerts(ssl_);        
-        SSL_write(ssl_, msg.c_str(), strlen(msg.c_str()));  
-        bytes = SSL_read(ssl_, buf, sizeof(buf));
-        buf[bytes] = 0;
-        printf("Received: \"%s\"\n", buf);
+        showCerts(ssl_);
+        Message msgSend(Message::REGISTER_REQ, 1, "Hi Server!");  
+        SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
+        Message serverResp; 
+        bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
+		serverResp.deserialize();
+		std::cout << "Server message:\t" << serverResp << std::endl;  
 	}
 
 	SSL_CTX *clientContext_;

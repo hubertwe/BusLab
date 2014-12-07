@@ -14,6 +14,8 @@
 #include <iostream>
 #include <pthread.h>
 
+#include "message.hpp"
+
 #define FAIL    -1
 
 /* TODO:
@@ -34,11 +36,11 @@ public:
         SSL_library_init();
         serverContext_ = initServerContext();
         loadCertificates(serverContext_, certFile_, keyFile_);
-        listenForClient();
+        listenForClients();
     }
 
 private:
-    void listenForClient()
+    void listenForClients()
     {
         listener_ = openListener(port_); 
         while(true)
@@ -64,10 +66,7 @@ private:
     {   
         SSL* ssl;
         ssl = (SSL*) sslPtr;
-        char buf[1024];
-        char reply[1024];
         int socket, bytes;
-        const char* echo="Hello Client\n\n";    
 
         if ( SSL_accept(ssl) == FAIL )
         {
@@ -75,13 +74,17 @@ private:
         }
         else
         {
-            bytes = SSL_read(ssl, buf, sizeof(buf)); 
+            Message req;
+            bytes = SSL_read(ssl, req.getBuffer(), req.getMessageSize());
+            req.deserialize();
             if ( bytes > 0 )
             {
-                buf[bytes] = 0;
-                printf("Client msg: \"%s\"\n", buf);
-                sprintf(reply, echo, buf);   /* construct reply */
-                SSL_write(ssl, reply, strlen(reply)); /* send reply */
+                std::cout << bytes << "bytes received" << std::endl;
+                std::cout << "Message size bytes " << req.getMessageSize() << std::endl;
+                std::cout << "Client message:\t" << req << std::endl;
+
+                Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
+                SSL_write(ssl, resp.serialize(), resp.getMessageSize());
             }
             else
             {
