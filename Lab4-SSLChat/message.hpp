@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
 
-#define stringify
 class Message
 {
 public:

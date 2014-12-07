@@ -12,7 +12,7 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 #include <iostream>
-#include <pthread.h>
+#include <algorithm>
 
 #include "message.hpp"
 
@@ -24,6 +24,16 @@
     - komunikacja 1 do 1
 */
 
+struct ClientDesc
+{
+    int descriptor;
+    SSL* ssl;
+
+    bool operator==(const ClientDesc& cli)
+    {
+        return ((descriptor == cli.descriptor) && (ssl = cli.ssl));
+    }
+};
 
 class Server
 {
@@ -36,36 +46,56 @@ public:
         SSL_library_init();
         serverContext_ = initServerContext();
         loadCertificates(serverContext_, certFile_, keyFile_);
+        FD_ZERO(&clientsSet_);
         listenForClients();
     }
 
 private:
     void listenForClients()
     {
-        listener_ = openListener(port_); 
+        listener_ = openListener(port_);
+        maximumClientDescriptor_ = listener_;
+        FD_SET(listener_, &clientsSet_);
+
         while(true)
         {
-            struct sockaddr_in addr;
-            socklen_t len = sizeof(addr);
-            SSL *ssl;
+            temporartSet_ = clientsSet_;
+            select(maximumClientDescriptor_+1, &temporartSet_, NULL, NULL, NULL);
 
-            int client = accept(listener_, (struct sockaddr*)&addr, &len);  
-            ssl = SSL_new(serverContext_);           
-            SSL_set_fd(ssl, client);
-            pthread_t thread;
-            threads_.push_back(thread);
-            int ret = pthread_create(&threads_.back(), NULL, serveClient, (void*) ssl);
-            if(ret)
+            if(FD_ISSET(listener_, &temporartSet_))
             {
-                std::cerr << "Error creating new thread. ErrorCode: " << ret << std::endl;
+                std::cout << "New client connection..." << std::endl;
+                struct sockaddr_in addr;
+                socklen_t len = sizeof(addr);
+                SSL *ssl;
+
+                int client = accept(listener_, (struct sockaddr*)&addr, &len);  
+                ssl = SSL_new(serverContext_);           
+                SSL_set_fd(ssl, client);
+
+                ClientDesc desc;
+                desc.descriptor = client;
+                desc.ssl = ssl;
+
+                clientDescriptors_.push_back(desc);
+                FD_SET(client, &clientsSet_);
+                if(client > maximumClientDescriptor_) maximumClientDescriptor_ = client;
+            }
+
+            for (auto client : clientDescriptors_)
+            {
+                if(FD_ISSET(client.descriptor, &clientsSet_))
+                {
+                    serveClient(client);
+                }
             }
         }
     }
 
-    static void *serveClient(void* sslPtr)
+    void serveClient(ClientDesc client)
     {   
         SSL* ssl;
-        ssl = (SSL*) sslPtr;
+        ssl = client.ssl;
         int socket, bytes;
 
         if ( SSL_accept(ssl) == FAIL )
@@ -94,8 +124,10 @@ private:
 
         socket = SSL_get_fd(ssl);     
         SSL_free(ssl);   
-        close(socket);
-        return sslPtr;       
+        close(socket); 
+        FD_CLR(client.descriptor, &clientsSet_);
+        clientDescriptors_.erase(std::remove(clientDescriptors_.begin(), clientDescriptors_.end(), client), clientDescriptors_.end());
+
     }
 
     void loadCertificates(SSL_CTX* ctx, std::string certFile, std::string keyFile)
@@ -172,6 +204,10 @@ private:
 
     SSL_CTX *serverContext_;
     int listener_;
+    int maximumClientDescriptor_;
+    fd_set temporartSet_;
+    fd_set clientsSet_;
+    std::vector<ClientDesc> clientDescriptors_;
     std::string certFile_;
     std::string keyFile_;
     int port_;
