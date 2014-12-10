@@ -8,6 +8,9 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <exception>
+#include <stdexcept>
+#include <sstream>
 #include "message.hpp"
 
 #define FAIL    -1
@@ -15,30 +18,107 @@
 class Client
 {
 public:
-	Client(std::string hostname, int port): hostname_(hostname), port_(port)
+	Client(std::string hostname, int port): hostname_(hostname), port_(port), certFile_("CA/certs/hubert.pem")
 	{ }
 
 	void start()
 	{
-		SSL_library_init();
-		clientContext_ = initCTX();
-		loadCertificates(clientContext_, certFile_, certFile_);
-		serverDescriptor_ = openConnection(hostname_, port_);
-		ssl_ = SSL_new(clientContext_);
-		SSL_set_fd(ssl_, serverDescriptor_);
-		if ( SSL_connect(ssl_) == FAIL )
-        	ERR_print_errors_fp(stderr);
-    	else
-    	{  
-    		handleConnection();
-		}
+		try
+		{
+			
+			SSL_library_init();
+			clientContext_ = initCTX();
+			loadCertificates(clientContext_, certFile_, certFile_);
 
-		SSL_free(ssl_);
-		close(serverDescriptor_);
-    	SSL_CTX_free(clientContext_);
+			serverDescriptor_ = openConnection(hostname_, port_);
+			ssl_ = SSL_new(clientContext_);
+
+			startupScreen();
+			
+			SSL_set_fd(ssl_, serverDescriptor_);
+			if ( SSL_connect(ssl_) == FAIL )
+			{
+	        	ERR_print_errors_fp(stderr);
+	        	throw std::runtime_error("SSL error!");				
+			}
+ 
+	    	registerToServer();
+	    	handleConnection();
+
+			SSL_free(ssl_);
+			close(serverDescriptor_);
+	    	SSL_CTX_free(clientContext_);
+	    }
+		catch (std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+			exit(1);
+		}
 	}
 
 private:
+	void send(Message& msg)
+	{
+		SSL_write(ssl_, msg.serialize(), msg.getMessageSize()); 	
+	}
+
+	Message receive()
+	{
+		Message serverResp;
+		bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
+		serverResp.deserialize();
+		std::stringstream ss;
+		ss << serverResp;
+        if ((bytes < 0) || (!serverResp.isStatusValid()))
+        {
+            ERR_print_errors_fp(stderr);
+            throw std::runtime_error("Receive error!" + ss.str());
+        }
+		return serverResp;
+	}
+
+
+	void registerToServer()
+	{       
+        Message msgSend(Message::REGISTER_REQ, 0, userName_.c_str());  
+        send(msgSend);
+        Message serverResp;
+        serverResp = receive();
+		std::cout << "Server message:\t" << serverResp << std::endl; 
+	}
+
+	void startupScreen()
+	{
+		std::cout << "Welcome in chat." << std::endl;
+		std::cout << "Please give you're name [" << getCN() << "]: ";
+		std::getline(std::cin, userName_);
+		if(userName_.size() == 0)
+		{
+			userName_ = getCN();
+		}
+
+		if(userName_.size() <= 0)
+		{
+			throw std::runtime_error("User name was not correct");
+		}
+
+		std::cout << "Hi " << userName_ << ". You will be connected shortly." << std::endl;
+	}
+
+	std::string getCN()
+	{
+		X509 *crt = SSL_get_certificate(ssl_);
+
+		std::string ownName (X509_NAME_oneline(X509_get_subject_name(crt), 0, 0));
+		std::size_t startPos = ownName.find("/CN=");
+		std::size_t endPos = ownName.find("/emailAddress=");
+
+		const char CN_LEN = 4;
+		ownName = ownName.substr(startPos+CN_LEN,endPos-(startPos+CN_LEN));  
+		
+		return ownName;
+	}
+
 	void loadCertificates(SSL_CTX* ctx, std::string certFile, std::string keyFile)
 	{
 	 /* set the local certificate from CertFile */
@@ -127,12 +207,12 @@ private:
 	void handleConnection()
 	{
 		printf("Connected with %s encryption\n", SSL_get_cipher(ssl_));
-        showCerts(ssl_);
+        //showCerts(ssl_);
         while(1)
         {
         	std::string msgText;
         	std::getline(std::cin, msgText);
-        	Message msgSend(Message::REGISTER_REQ, 1, msgText.c_str());  
+        	Message msgSend(Message::TEXT_MSG, 1, msgText.c_str());  
         	SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
         	Message serverResp; 
         	bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
@@ -148,7 +228,8 @@ private:
     int bytes;
     std::string hostname_;
     int port_;
-    std::string certFile_ = "CA/certs/hubert.pem";
+    std::string certFile_;
+    std::string userName_;
 };
 
 

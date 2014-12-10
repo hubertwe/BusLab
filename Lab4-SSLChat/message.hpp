@@ -10,16 +10,21 @@ public:
 		REGISTER_REQ,
 		REGISTER_RESP,
 		TEXT_MSG,
-		TEXT_MSG_RESP,
 		BROADCAST_MSG,
-		BROADCAST_MSG_RESP,
 		CLIENT_CONN_IND,
 		CLIENT_LOST_IND
+	};
+
+	enum Status 
+	{
+		OK = 0,
+		FAIL
 	};
 
 	Message(Type type, int dest, const char* payload)
 	{
 		setType(type);
+		setStatus(OK);
 		setClientDestination(dest);
 		setPayload(payload);
 	}
@@ -31,20 +36,22 @@ public:
 	{
 		return out << std::endl <<
 		"\tType: "<< m.getType() << std::endl <<
+		"\tStatus: "<< m.getStatus() << std::endl <<
 		"\tDestination: "<< m.getClientDestination() << std::endl <<
 		"\tPAYLOAD: "<< std::string(m.getPayload());
 	}
 
 	static constexpr int getMessageSize()
 	{
-		return sizeof(Type) + sizeof(int) + PAYLOAD_SIZE;
+		return sizeof(Type) + sizeof(Status) +sizeof(int) + PAYLOAD_SIZE;
 	}
 
 	void serializeToBuffer(char* buffer)
 	{
 		buffer[0] = type_;
-		buffer[1] = clientDestination_;
-		memcpy(buffer+sizeof(Type)+sizeof(int), payload_, PAYLOAD_SIZE);
+		buffer[1] = status_;
+		buffer[2] = clientDestination_;
+		memcpy(buffer + sizeof(Type) + sizeof(Status) + sizeof(int), payload_, PAYLOAD_SIZE);
 	}
 
 	char* serialize()
@@ -56,8 +63,9 @@ public:
 	void deserializeFromBuffer(char* buffer)
 	{
 		type_ = static_cast<Type>(buffer[0]);
-		clientDestination_ = buffer[1];
-		memcpy(payload_, buffer+sizeof(Type)+sizeof(int), PAYLOAD_SIZE);
+		status_ = static_cast<Status>(buffer[1]);
+		clientDestination_ = buffer[2];
+		memcpy(payload_, buffer+ sizeof(Status) + sizeof(Type) + sizeof(int), PAYLOAD_SIZE);
 	}
 
 	void deserialize()
@@ -68,6 +76,11 @@ public:
 	void setType(Type type)
 	{
 		type_ = type;
+	}
+
+	void setStatus(Status status)
+	{
+		status_ = status;
 	}
 
 	void setClientDestination(int clientId)
@@ -83,6 +96,16 @@ public:
 	Type getType() const
 	{
 		return type_;
+	}
+
+	Status getStatus() const
+	{
+		return status_;
+	}
+
+	bool isStatusValid() const
+	{
+		return (getStatus() == OK);
 	}
 
 	int getClientDestination() const
@@ -104,6 +127,7 @@ private:
 	const static int PAYLOAD_SIZE = 1024;
 
 	Type type_;
+	Status status_;
 	int clientDestination_;
 	char payload_[PAYLOAD_SIZE];
 	char serialized_[PAYLOAD_SIZE+sizeof(int)+sizeof(Type)];

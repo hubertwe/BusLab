@@ -12,6 +12,10 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 #include <iostream>
+#include <exception>
+#include <stdexcept>
+#include <sstream>
+#include <map>
 #include <algorithm>
 
 #include "message.hpp"
@@ -19,8 +23,9 @@
 #define FAIL    -1
 
 /* TODO:
-    - wiecej niz 1 klient
+    + wiecej niz 1 klient
     - rozglaszanie do wszystkich (na podstawie certyfikatow, tylko wybrani klienci)
+    - w clientDesc informacja na podstawie certyfikatu (nie nickname'a) że klient może rozgłać wiadomości
     - komunikacja 1 do 1
 */
 
@@ -28,6 +33,7 @@ struct ClientDesc
 {
     int descriptor;
     SSL* ssl;
+    std::string name;
 
     bool operator==(const ClientDesc& cli)
     {
@@ -83,7 +89,7 @@ private:
                 desc.descriptor = client;
                 desc.ssl = ssl;
 
-                clientDescriptors_.push_back(desc);
+                clientDescriptors_[client] = desc;
                 FD_SET(client, &clientsSet_);
                 if(client > maximumClientDescriptor_) maximumClientDescriptor_ = client;
             }
@@ -93,12 +99,49 @@ private:
                 temporarySet_ = clientsSet_;
                 select(maximumClientDescriptor_+1, &temporarySet_, NULL, NULL, NULL);
                 //std::cout << "Checking client: " << client.descriptor << std::endl;
-                if(FD_ISSET(client.descriptor, &temporarySet_))
+                if(FD_ISSET(client.second.descriptor, &temporarySet_))
                 {
-                    serveClient(client);
+                    serveClient(client.second);
                 }
             }
         }
+    }
+
+    void send(SSL* ssl, Message& msg)
+    {
+        SSL_write(ssl, msg.serialize(), msg.getMessageSize());     
+    }
+
+    Message receive(SSL* ssl)
+    {
+        Message serverResp;
+        int bytes = SSL_read(ssl, serverResp.getBuffer(), serverResp.getMessageSize());
+        serverResp.deserialize();
+        std::stringstream ss;
+        ss << serverResp;
+
+        if ((bytes < 0) || (!serverResp.isStatusValid()))
+        {
+            ERR_print_errors_fp(stderr);
+            throw std::runtime_error("Receive error!" + ss.str());
+        }
+        return serverResp;
+    }
+
+    void broadcast(SSL* senderSsl, Message& msg)
+    {
+        for(auto& client: clientDescriptors_)
+        {
+            if(senderSsl != client.second.ssl)
+            {
+                SSL_write(client.second.ssl, msg.serialize(), msg.getMessageSize());
+            }
+        }     
+    }
+
+    void registerClient(Message& message, int client)
+    {
+
     }
 
     void serveClient(ClientDesc client)
@@ -106,26 +149,31 @@ private:
         std::cout << "serveClient "<< client.descriptor << " method" << std::endl;
         SSL* ssl;
         ssl = client.ssl;
-        int socket, bytes;
+
         Message req;
+        req = receive(ssl);
 
-        bytes = SSL_read(ssl, req.getBuffer(), req.getMessageSize());
-        req.deserialize();
-        if ( bytes > 0 )
+        switch (req.getType())
         {
-            std::cout << "==================================" << std::endl;
-            std::cout << bytes << " bytes received" << std::endl;
-            std::cout << "Client message:\t" << req << std::endl;
-            std::cout << "Client id:\t" << client.descriptor <<std::endl;
+            case Message::REGISTER_REQ :
+            {
 
-            Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
-            SSL_write(ssl, resp.serialize(), resp.getMessageSize());
-        }
-        else
-        {
-            ERR_print_errors_fp(stderr);
-        }
+                break;
+            }
 
+            default:
+            {
+                break;
+            }
+        }
+  
+        std::cout << "==================================" << std::endl;
+        std::cout << "Client message:\t" << req << std::endl;
+        std::cout << "Client id:\t" << client.descriptor <<std::endl;
+
+        Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
+
+        send(ssl, resp);
 
         //socket = SSL_get_fd(ssl);     
         //SSL_free(ssl);   
@@ -212,9 +260,8 @@ private:
     int maximumClientDescriptor_;
     fd_set temporarySet_;
     fd_set clientsSet_;
-    std::vector<ClientDesc> clientDescriptors_;
+    std::map<int, ClientDesc> clientDescriptors_;
     std::string certFile_;
     std::string keyFile_;
     int port_;
-    std::vector<pthread_t> threads_;
 };

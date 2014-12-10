@@ -2,8 +2,8 @@
 
 #include "client.hpp"
 
-int main(int argv, char** argc)
+int main(int argc, char** argv)
 {
-    Client client("127.0.0.1", 56005);
+    Client client("127.0.0.1", atoi(argv[1]));
     client.start();
 }
