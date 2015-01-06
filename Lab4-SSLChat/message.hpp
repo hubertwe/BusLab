@@ -11,7 +11,8 @@ public:
 		TEXT_MSG,
 		BROADCAST_MSG,
 		CLIENT_CONN_IND,
-		CLIENT_LOST_IND
+		CLIENT_QUIT_IND,
+		SERVER_DIED
 	};
 
 	enum Status 

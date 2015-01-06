@@ -185,18 +185,17 @@ private:
 	{   
 	    X509 *cert;
 	    char *line;
-
-	    cert = SSL_get_peer_certificate(ssl); /* get the server's certificate */
+	    cert = SSL_get_peer_certificate(ssl);
 	    if ( cert != NULL )
 	    {
 	        printf("Server certificates:\n");
 	        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
 	        printf("Subject: %s\n", line);
-	        free(line);       /* free the malloc'ed string */
+	        free(line);
 	        line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
 	        printf("Issuer: %s\n", line);
-	        free(line);       /* free the malloc'ed string */
-	        X509_free(cert);     /* free the malloc'ed certificate copy */
+	        free(line);
+	        X509_free(cert);   
 	    }
 	    else
 	        printf("No certificates.\n");
@@ -206,6 +205,24 @@ private:
 	{
 		std::cout << "New client indication received - " << clientName << std::endl;
 		usersBindings_[clientId] = clientName;
+	}
+
+	void handleBroadcastMessage(Message& msg)
+	{
+		std::cout << "Received broadcast message from " << usersBindings_[msg.getClientSource()] << std::endl;
+		std::cout << msg.getPayload() << std::endl;
+
+	}
+
+	void handleTextMessage(Message& msg)
+	{
+		std::cout << usersBindings_[msg.getClientSource()] <<": "<< msg.getPayload() << std::endl;
+	}
+
+	void closeClientDueToServerClosedConnection()
+	{
+		std::cout << "Server is not working anymore. Closing client." << std::endl;
+		exit(0);
 	}
 
 	void handleIncommingMessage(Message& msg)
@@ -218,9 +235,27 @@ private:
                 break;
             }
 
+            case Message::BROADCAST_MSG:
+            {
+				handleBroadcastMessage(msg);
+            	break;
+            }
+
+            case Message::TEXT_MSG:
+            {
+				handleTextMessage(msg);
+            	break;
+            }
+
+            case Message::SERVER_DIED: 
+            {
+                closeClientDueToServerClosedConnection();
+                break;
+            }
+
             default:
             {
-            	std::cout << "Nothing to do\nServer message:\t" << msg << std::endl;
+            	std::cout << "Unknown type of message received" << std::endl;
                 break;
             }
 		}
@@ -272,7 +307,11 @@ private:
 
 	void sendBroadcastMessage()
 	{
-		std::cout << "Not implemented yet!" <<std::endl;
+		std::cout << "Enter broadcast message text:";
+		std::string messageText;
+		std::getline(std::cin, messageText);
+		Message msg(Message::BROADCAST_MSG, 0, actualUserDestination_, messageText.c_str());  
+		send(msg);
 	}
 
 	void selectUser()
@@ -293,7 +332,6 @@ private:
 		{
 			std::cout << "Selected userId: "<< selectedId << " doesn't exists" <<std::endl;
 		}
-
 	}
 
 	void printKnownUsers()
@@ -304,7 +342,13 @@ private:
 		{
 			std::cout << user.first << " - " << user.second <<std::endl;
 		}
+	}
 
+	void quit()
+	{
+		Message quitMessage(Message::CLIENT_QUIT_IND, 0, 0, "");
+		send(quitMessage);
+		exit(0);
 	}
 
 	void printHelp()
@@ -312,11 +356,11 @@ private:
 		std::cout << 	"Client help:" << std::endl <<
 						"------------" << std::endl <<
 						"Avaliable commands:" << std::endl <<
-						"!broadcast - broadcast message to all users" << std::endl <<
-						"!help - print this help" << std::endl <<
-						"!users - print users connected to server" << std::endl <<
-						"!selectuser - select user to talk with" << std::endl <<
-						"!quit - exits client application" << std::endl;
+						"\t!broadcast - broadcast message to all users" << std::endl <<
+						"\t!help - print this help" << std::endl <<
+						"\t!users - print users connected to server" << std::endl <<
+						"\t!selectuser - select user to talk with" << std::endl <<
+						"\t!quit - exits client application" << std::endl;
 	}
 	bool isCommand(std::string& line)
 	{
@@ -351,7 +395,7 @@ private:
 		}		
 		else if (line == "!quit")
 		{
-			exit(0);
+			quit();
 		}
 		else
 		{
