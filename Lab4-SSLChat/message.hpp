@@ -8,7 +8,6 @@ public:
 	enum Type
 	{
 		REGISTER_REQ,
-		REGISTER_RESP,
 		TEXT_MSG,
 		BROADCAST_MSG,
 		CLIENT_CONN_IND,
@@ -28,6 +27,15 @@ public:
 		setClientSource(source);
 		setClientDestination(dest);
 		setPayload(payload);
+	}
+
+	Message(Type type, int source, int dest, std::string payload)
+	{
+		setType(type);
+		setStatus(OK);
+		setClientSource(source);
+		setClientDestination(dest);
+		setPayload(payload.c_str());
 	}
 
 	Message()

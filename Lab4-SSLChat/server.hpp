@@ -33,7 +33,6 @@ struct ClientDesc
 {
     int descriptor;
     SSL* ssl;
-    std::string name;
 
     bool operator==(const ClientDesc& cli)
     {
@@ -137,6 +136,15 @@ private:
         }     
     }
 
+    void broadcastInfoAboutAllClients()
+    {
+        for(auto& known: clientNameToDescriptorBind_)
+        {
+            Message clientInd(Message::CLIENT_CONN_IND, known.first, 0, known.second);
+            broadcast(clientInd);  
+        }
+    }
+
     void broadcastExcept(SSL* senderSsl, Message& msg)
     {
         for(auto& client: clientDescriptors_)
@@ -151,10 +159,19 @@ private:
     void registerClient(Message& message, ClientDesc client)
     {
         std::cout << "New client register request received - " << message.getPayload() <<std::endl;
-        clientNameToDescriptorBind_[std::string(message.getPayload())] = client.descriptor;
+        clientNameToDescriptorBind_[client.descriptor] = std::string(message.getPayload());
         std::cout << "Actual known clients = " << clientNameToDescriptorBind_.size() <<std::endl;
-        Message clientInd(Message::CLIENT_CONN_IND, client.descriptor, 0, message.getPayload());
-        broadcast(clientInd);
+        broadcastInfoAboutAllClients();
+    }
+
+    void forwardMessage(Message& message, ClientDesc client)
+    {
+        message.setClientSource(client.descriptor);
+        int clientDest = message.getClientDestination();
+        std::cout << "Forwarding message from " << 
+        clientNameToDescriptorBind_[client.descriptor] << " to "  <<
+        clientNameToDescriptorBind_[clientDest] << std::endl;
+        send(clientDescriptors_[clientDest].ssl ,message);
     }
 
     void serveClient(ClientDesc client)
@@ -171,6 +188,12 @@ private:
             case Message::REGISTER_REQ :
             {
                 registerClient(req, client);
+                break;
+            }
+
+            case Message::TEXT_MSG : 
+            {
+                forwardMessage(req, client);
                 break;
             }
 
@@ -266,7 +289,7 @@ private:
     fd_set temporarySet_;
     fd_set clientsSet_;
     std::map<int, ClientDesc> clientDescriptors_;
-    std::map<std::string, int> clientNameToDescriptorBind_;
+    std::map<int, std::string> clientNameToDescriptorBind_;
     std::string certFile_;
     std::string keyFile_;
     int port_;

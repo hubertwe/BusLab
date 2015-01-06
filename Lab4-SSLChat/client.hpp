@@ -20,7 +20,9 @@ class Client
 {
 public:
 	Client(std::string hostname, int port): hostname_(hostname), port_(port), certFile_("CA/certs/hubert.pem")
-	{ }
+	{
+		actualUserDestination_ = 0;
+	}
 
 	void start()
 	{
@@ -90,7 +92,8 @@ private:
 
 	void startupScreen()
 	{
-		std::cout << "Welcome in chat." << std::endl;
+		std::cout << "         - Welcome in chat. -         " << std::endl;
+		std::cout << " - Type !help for more instuctions. - " << std::endl;
 		std::cout << "Please give your name [" << getCN() << "]: ";
 		std::getline(std::cin, userName_);
 		if(userName_.size() == 0)
@@ -208,7 +211,7 @@ private:
 	void rememberNewClient(int clientId, std::string clientName)
 	{
 		std::cout << "New client indication received - " << clientName << std::endl;
-		usersBindings_[clientName] = clientId;
+		usersBindings_[clientId] = clientName;
 	}
 
 	void handleIncommingMessage(Message& msg)
@@ -259,11 +262,17 @@ private:
 	        	}
 	        	else
 	        	{
-	        		Message msgSend(Message::TEXT_MSG, 0, 0, msgText.c_str());  
-	        		SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
+	        		if(actualUserDestination_ == 0)
+	        		{
+	        			std::cout << "No user selected. Can't send message" << std::endl;
+	        		}
+	        		else
+	        		{
+	        			Message msgSend(Message::TEXT_MSG, 0, actualUserDestination_, msgText.c_str());  
+	        			SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize());
+	        		}
 	        	}
 	        }
-
 	    }
 	}
 
@@ -274,7 +283,23 @@ private:
 
 	void selectUser()
 	{
-		std::cout << "Not implemented yet!" <<std::endl;
+		printKnownUsers();
+		std::cout << "Give one of above id's: ";
+		std::string selectedIdStr;
+		std::getline(std::cin, selectedIdStr);
+		int selectedId = atoi(selectedIdStr.c_str());
+
+		if(usersBindings_.find(selectedId) != usersBindings_.end())
+		{
+			actualUserDestination_ = selectedId;
+			std::cout << "Actual selected userId: "<< actualUserDestination_  << " - Name: " << usersBindings_[actualUserDestination_]<<std::endl;
+
+		}
+		else
+		{
+			std::cout << "Selected userId: "<< selectedId << " doesn't exists" <<std::endl;
+		}
+
 	}
 
 	void printKnownUsers()
@@ -283,7 +308,7 @@ private:
 		std::cout << "id - name" <<std::endl;
 		for(auto& user : usersBindings_)
 		{
-			std::cout << user.second << " - " << user.first <<std::endl;
+			std::cout << user.first << " - " << user.second <<std::endl;
 		}
 
 	}
@@ -349,7 +374,8 @@ private:
     int port_;
     std::string certFile_;
     std::string userName_;
-    std::map<std::string, int> usersBindings_;
+    int actualUserDestination_;
+    std::map<int,std::string> usersBindings_;
 };
 
 
