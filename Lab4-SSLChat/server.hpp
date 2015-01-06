@@ -1,24 +1,23 @@
-//SSL-Server.c
-#include <vector>
-#include <errno.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <string>
+#include <algorithm>
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <errno.h>
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <malloc.h>
+#include <map>
 #include <netinet/in.h>
-#include <resolv.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
-#include <iostream>
-#include <exception>
+#include <resolv.h>
+#include <string>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <stdexcept>
 #include <sstream>
-#include <map>
 #include <set>
-#include <algorithm>
-#include <fstream>
+#include <unistd.h>
+#include <vector>
 
 #include "message.hpp"
 

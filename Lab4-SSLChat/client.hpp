@@ -1,17 +1,18 @@
-#include <stdio.h>
 #include <errno.h>
-#include <unistd.h>
+#include <exception>
 #include <malloc.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <resolv.h>
+#include <map>
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#include <exception>
-#include <stdexcept>
+#include <resolv.h>
 #include <sstream>
-#include <map>
+#include <stdexcept>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 #include "message.hpp"
 
 #define FAIL    -1
