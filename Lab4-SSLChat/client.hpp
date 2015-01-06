@@ -11,6 +11,7 @@
 #include <exception>
 #include <stdexcept>
 #include <sstream>
+#include <map>
 #include "message.hpp"
 
 #define FAIL    -1
@@ -80,17 +81,17 @@ private:
 
 	void registerToServer()
 	{       
-        Message msgSend(Message::REGISTER_REQ, 0, userName_.c_str());  
+        Message msgSend(Message::REGISTER_REQ, 0, 0, userName_.c_str());  
         send(msgSend);
-        Message serverResp;
-        serverResp = receive();
-		std::cout << "Server message:\t" << serverResp << std::endl; 
+        //Message serverResp;
+        //serverResp = receive();
+		//std::cout << "Server message:\t" << serverResp << std::endl; 
 	}
 
 	void startupScreen()
 	{
 		std::cout << "Welcome in chat." << std::endl;
-		std::cout << "Please give you're name [" << getCN() << "]: ";
+		std::cout << "Please give your name [" << getCN() << "]: ";
 		std::getline(std::cin, userName_);
 		if(userName_.size() == 0)
 		{
@@ -204,20 +205,138 @@ private:
 	        printf("No certificates.\n");
 	}
 
+	void rememberNewClient(int clientId, std::string clientName)
+	{
+		std::cout << "New client indication received - " << clientName << std::endl;
+		usersBindings_[clientName] = clientId;
+	}
+
+	void handleIncommingMessage(Message& msg)
+	{
+		switch (msg.getType())
+		{
+            case Message::CLIENT_CONN_IND:
+            {
+                rememberNewClient(msg.getClientSource(), std::string(msg.getPayload()));
+                break;
+            }
+
+            default:
+            {
+            	std::cout << "Nothing to do\nServer message:\t" << msg << std::endl;
+                break;
+            }
+		}
+	}
+
 	void handleConnection()
 	{
+		fd_set listenedDescriptors;
+		FD_ZERO(&listenedDescriptors);
+    	FD_SET(0, &listenedDescriptors);	//stdin
+    	FD_SET(serverDescriptor_, &listenedDescriptors);
+
 		printf("Connected with %s encryption\n", SSL_get_cipher(ssl_));
-        //showCerts(ssl_);
-        while(1)
+		//showCerts(ssl_);
+        while(true)
         {
-        	std::string msgText;
-        	std::getline(std::cin, msgText);
-        	Message msgSend(Message::TEXT_MSG, 1, msgText.c_str());  
-        	SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
-        	Message serverResp; 
-        	bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
-			serverResp.deserialize();
-			std::cout << "Server message:\t" << serverResp << std::endl; 	
+        	fd_set temporaryDescriptors = listenedDescriptors;
+        	select(serverDescriptor_+1, &temporaryDescriptors, NULL, NULL, NULL);
+	        if(FD_ISSET(serverDescriptor_, &temporaryDescriptors))
+	        {
+	        	Message serverResp; 
+	        	bytes = SSL_read(ssl_, serverResp.getBuffer(), serverResp.getMessageSize());
+				serverResp.deserialize();
+				handleIncommingMessage(serverResp);
+	        }
+	        else if (FD_ISSET(0, &temporaryDescriptors))
+	        {
+	        	std::string msgText;
+	        	std::getline(std::cin, msgText);
+	        	if(isCommand(msgText))
+	        	{
+	        		processCommand(msgText);
+	        	}
+	        	else
+	        	{
+	        		Message msgSend(Message::TEXT_MSG, 0, 0, msgText.c_str());  
+	        		SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize()); 
+	        	}
+	        }
+
+	    }
+	}
+
+	void sendBroadcastMessage()
+	{
+		std::cout << "Not implemented yet!" <<std::endl;
+	}
+
+	void selectUser()
+	{
+		std::cout << "Not implemented yet!" <<std::endl;
+	}
+
+	void printKnownUsers()
+	{
+		std::cout << "Actual users:" <<std::endl;
+		std::cout << "id - name" <<std::endl;
+		for(auto& user : usersBindings_)
+		{
+			std::cout << user.second << " - " << user.first <<std::endl;
+		}
+
+	}
+
+	void printHelp()
+	{
+		std::cout << 	"Client help:" << std::endl <<
+						"------------" << std::endl <<
+						"Avaliable commands:" << std::endl <<
+						"!broadcast - broadcast message to all users" << std::endl <<
+						"!help - print this help" << std::endl <<
+						"!users - print users connected to server" << std::endl <<
+						"!selectuser - select user to talk with" << std::endl <<
+						"!quit - exits client application" << std::endl;
+	}
+	bool isCommand(std::string& line)
+	{
+		if(line.size()>0)
+		{
+			if(line.at(0) == '!') 
+			{
+				return true;
+			}
+			else return false;
+		}
+		else return false;
+	}
+
+	void processCommand(std::string& line)
+	{
+		if(line  == "!help")
+		{
+			printHelp();
+		}
+		else if (line == "!broadcast")
+		{
+			sendBroadcastMessage();
+		}
+		else if (line == "!users")
+		{
+			printKnownUsers();
+		}
+		else if (line == "!selectuser")
+		{
+			selectUser();
+		}		
+		else if (line == "!quit")
+		{
+			exit(0);
+		}
+		else
+		{
+			std::cout << "Unrecognized command: " << line <<std::endl;
 		}
 	}
 
@@ -230,6 +349,7 @@ private:
     int port_;
     std::string certFile_;
     std::string userName_;
+    std::map<std::string, int> usersBindings_;
 };
 
 

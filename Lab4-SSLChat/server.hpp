@@ -53,6 +53,7 @@ public:
         serverContext_ = initServerContext();
         loadCertificates(serverContext_, certFile_, keyFile_);
         FD_ZERO(&clientsSet_);
+        std::cout << "Server is ready for accepting connections." <<std::endl;
         listenForClients();
     }
 
@@ -128,7 +129,15 @@ private:
         return serverResp;
     }
 
-    void broadcast(SSL* senderSsl, Message& msg)
+    void broadcast(Message& msg)
+    {
+        for(auto& client: clientDescriptors_)
+        {
+            SSL_write(client.second.ssl, msg.serialize(), msg.getMessageSize());
+        }     
+    }
+
+    void broadcastExcept(SSL* senderSsl, Message& msg)
     {
         for(auto& client: clientDescriptors_)
         {
@@ -139,9 +148,13 @@ private:
         }     
     }
 
-    void registerClient(Message& message, int client)
+    void registerClient(Message& message, ClientDesc client)
     {
-
+        std::cout << "New client register request received - " << message.getPayload() <<std::endl;
+        clientNameToDescriptorBind_[std::string(message.getPayload())] = client.descriptor;
+        std::cout << "Actual known clients = " << clientNameToDescriptorBind_.size() <<std::endl;
+        Message clientInd(Message::CLIENT_CONN_IND, client.descriptor, 0, message.getPayload());
+        broadcast(clientInd);
     }
 
     void serveClient(ClientDesc client)
@@ -157,7 +170,7 @@ private:
         {
             case Message::REGISTER_REQ :
             {
-
+                registerClient(req, client);
                 break;
             }
 
@@ -167,14 +180,6 @@ private:
             }
         }
   
-        std::cout << "==================================" << std::endl;
-        std::cout << "Client message:\t" << req << std::endl;
-        std::cout << "Client id:\t" << client.descriptor <<std::endl;
-
-        Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
-
-        send(ssl, resp);
-
         //socket = SSL_get_fd(ssl);     
         //SSL_free(ssl);   
         //close(socket); 
@@ -261,6 +266,7 @@ private:
     fd_set temporarySet_;
     fd_set clientsSet_;
     std::map<int, ClientDesc> clientDescriptors_;
+    std::map<std::string, int> clientNameToDescriptorBind_;
     std::string certFile_;
     std::string keyFile_;
     int port_;
