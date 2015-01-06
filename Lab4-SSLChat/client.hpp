@@ -59,6 +59,13 @@ public:
 		}
 	}
 
+    void INThandler()
+    {
+        std::cout << std::endl << "Killing client by INT signal... Need to tell server about it." << std::endl;
+		quit();
+    }
+
+
 private:
 	void send(Message& msg)
 	{
@@ -225,6 +232,17 @@ private:
 		exit(0);
 	}
 
+	void forgetAboutClient(Message& msg)
+	{
+		int clientId = msg.getClientSource();
+		std::cout << "Client " << usersBindings_[clientId] << " has left chat." <<std::endl;
+		usersBindings_.erase(clientId);
+		if(actualUserDestination_ == clientId)
+		{
+			actualUserDestination_ = 0;
+		}
+	}
+
 	void handleIncommingMessage(Message& msg)
 	{
 		switch (msg.getType())
@@ -252,6 +270,12 @@ private:
                 closeClientDueToServerClosedConnection();
                 break;
             }
+
+            case Message::CLIENT_QUIT_IND: 
+            {
+                forgetAboutClient(msg);
+                break;
+            }            
 
             default:
             {

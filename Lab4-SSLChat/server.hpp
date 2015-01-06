@@ -192,7 +192,6 @@ private:
     {
         std::cout << "New client register request received - " << message.getPayload() <<std::endl;
         clientNameToDescriptorBind_[client.descriptor] = std::string(message.getPayload());
-        std::cout << "Actual known clients = " << clientNameToDescriptorBind_.size() <<std::endl;
         broadcastInfoAboutAllConnectedClients();
     }
 
@@ -215,7 +214,6 @@ private:
 
     void serveClient(ClientDesc client)
     {   
-        std::cout << "serveClient "<< client.descriptor << " method" << std::endl;
         SSL* ssl;
         ssl = client.ssl;
 
@@ -268,7 +266,7 @@ private:
         X509 *crt = SSL_get_peer_certificate(ssl);
 
         std::string ownName (X509_NAME_oneline(X509_get_subject_name(crt), 0, 0));
-        std::cout << ownName << std::endl;
+
         std::size_t startPos = ownName.find("/CN=");
         std::size_t endPos = ownName.find("/emailAddress=");
 
