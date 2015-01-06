@@ -85,9 +85,6 @@ private:
 	{       
         Message msgSend(Message::REGISTER_REQ, 0, 0, userName_.c_str());  
         send(msgSend);
-        //Message serverResp;
-        //serverResp = receive();
-		//std::cout << "Server message:\t" << serverResp << std::endl; 
 	}
 
 	void startupScreen()
@@ -125,19 +122,16 @@ private:
 
 	void loadCertificates(SSL_CTX* ctx, std::string certFile, std::string keyFile)
 	{
-	 /* set the local certificate from CertFile */
 	    if ( SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0 )
 	    {
 	        ERR_print_errors_fp(stderr);
 	        abort();
 	    }
-	    /* set the private key from KeyFile (may be the same as CertFile) */
 	    if ( SSL_CTX_use_PrivateKey_file(ctx, keyFile.c_str(), SSL_FILETYPE_PEM) <= 0 )
 	    {
 	        ERR_print_errors_fp(stderr);
 	        abort();
 	    }
-	    /* verify private key */
 	    if ( !SSL_CTX_check_private_key(ctx) )
 	    {
 	        fprintf(stderr, "Private key does not match the public certificate\n");
@@ -269,7 +263,7 @@ private:
 	        		else
 	        		{
 	        			Message msgSend(Message::TEXT_MSG, 0, actualUserDestination_, msgText.c_str());  
-	        			SSL_write(ssl_, msgSend.serialize(), msgSend.getMessageSize());
+	        			send(msgSend);
 	        		}
 	        	}
 	        }

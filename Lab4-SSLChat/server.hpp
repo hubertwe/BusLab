@@ -48,12 +48,20 @@ public:
     
     void start() 
     {
-        SSL_library_init();
-        serverContext_ = initServerContext();
-        loadCertificates(serverContext_, certFile_, keyFile_);
-        FD_ZERO(&clientsSet_);
-        std::cout << "Server is ready for accepting connections." <<std::endl;
-        listenForClients();
+        try
+        {
+            SSL_library_init();
+            serverContext_ = initServerContext();
+            loadCertificates(serverContext_, certFile_, keyFile_);
+            FD_ZERO(&clientsSet_);
+            std::cout << "Server is ready for accepting connections." <<std::endl;
+            listenForClients();
+        }
+        catch (std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+            exit(1);
+        }
     }
 
 private:
