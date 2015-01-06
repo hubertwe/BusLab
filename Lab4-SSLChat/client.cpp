@@ -10,7 +10,7 @@ void INThandler(int signal);
 int main(int argc, char** argv)
 {
     signal(SIGINT, INThandler);
-    Client client("127.0.0.1", atoi(argv[1]));
+    Client client("127.0.0.1", atoi(argv[1]), argv[2]);
     clientPtr = &client;
     client.start();
 }

@@ -19,7 +19,7 @@
 class Client
 {
 public:
-	Client(std::string hostname, int port): hostname_(hostname), port_(port), certFile_("CA/certs/hubert.pem")
+	Client(std::string hostname, int port, std::string certfile): hostname_(hostname), port_(port), certFile_(certfile)
 	{
 		actualUserDestination_ = 0;
 	}

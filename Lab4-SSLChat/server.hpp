@@ -16,23 +16,19 @@
 #include <stdexcept>
 #include <sstream>
 #include <map>
+#include <set>
 #include <algorithm>
+#include <fstream>
 
 #include "message.hpp"
 
 #define FAIL    -1
 
-/* TODO:
-    + wiecej niz 1 klient
-    - rozglaszanie do wszystkich (na podstawie certyfikatow, tylko wybrani klienci)
-    - w clientDesc informacja na podstawie certyfikatu (nie nickname'a) że klient może rozgłać wiadomości
-    - komunikacja 1 do 1
-*/
-
 struct ClientDesc
 {
     int descriptor;
     SSL* ssl;
+    bool canBroadcast;
 
     bool operator==(const ClientDesc& cli)
     {
@@ -50,6 +46,7 @@ public:
     {
         try
         {
+            readClientsThatCanBroadcastFromFile();
             SSL_library_init();
             serverContext_ = initServerContext();
             loadCertificates(serverContext_, certFile_, keyFile_);
@@ -73,6 +70,33 @@ public:
     }
 
 private:
+    void readClientsThatCanBroadcastFromFile()
+    {
+        std::cout << "Reading broadcast users from file..." << std::endl;
+        std::ifstream file ("clientBroadcast.cfg");
+        if(file.is_open())
+        {
+            std::string username;
+            while( std::getline (file, username) )
+            {
+                usersThatCanBroadcast_.insert(username);
+            }
+            file.close();
+          }
+    }
+
+    bool isNameOnBroadcastList(std::string name)
+    {
+        if(usersThatCanBroadcast_.find(name) != usersThatCanBroadcast_.end())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     void listenForClients()
     {
         listener_ = openListener(port_);
@@ -106,6 +130,7 @@ private:
                 desc.ssl = ssl;
 
                 std::cout << "Connected client real name: " << getClientCN(ssl) << std::endl;
+                desc.canBroadcast = isNameOnBroadcastList(getClientCN(ssl));
 
                 clientDescriptors_[client] = desc;
                 FD_SET(client, &clientsSet_);
@@ -170,8 +195,7 @@ private:
 
     bool isClientAbleToBroadcastMessage(int clientId)
     {
-        //TODO: fix it
-        return true; // for now everyone can broadcast
+        return clientDescriptors_[clientId].canBroadcast; // for now everyone can broadcast
     }
 
     void broadcastTextMessageToAll(Message& message, ClientDesc client)
@@ -355,6 +379,7 @@ private:
     fd_set clientsSet_;
     std::map<int, ClientDesc> clientDescriptors_;
     std::map<int, std::string> clientNameToDescriptorBind_;
+    std::set<std::string> usersThatCanBroadcast_;
     std::string certFile_;
     std::string keyFile_;
     int port_;
