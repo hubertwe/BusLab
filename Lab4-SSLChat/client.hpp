@@ -361,10 +361,11 @@ private:
 	void printKnownUsers()
 	{
 		std::cout << "Actual users:" <<std::endl;
-		std::cout << "id - name" <<std::endl;
+		std::cout << "id \t \tname" <<std::endl;
+		std::cout << "-- \t \t----" <<std::endl;
 		for(auto& user : usersBindings_)
 		{
-			std::cout << user.first << " - " << user.second <<std::endl;
+			std::cout << user.first << " \t \t" << user.second <<std::endl;
 		}
 	}
 
@@ -380,11 +381,11 @@ private:
 		std::cout << 	"Client help:" << std::endl <<
 						"------------" << std::endl <<
 						"Avaliable commands:" << std::endl <<
-						"\t!broadcast - broadcast message to all users" << std::endl <<
-						"\t!help - print this help" << std::endl <<
-						"\t!users - print users connected to server" << std::endl <<
-						"\t!selectuser - select user to talk with" << std::endl <<
-						"\t!quit - exits client application" << std::endl;
+						"\t!broadcast  or !b - broadcast message to all users" << std::endl <<
+						"\t!help       or !h - print this help" << std::endl <<
+						"\t!users      or !u - print users connected to server" << std::endl <<
+						"\t!selectuser or !s - select user to talk with" << std::endl <<
+						"\t!quit       or !q - exits client application" << std::endl;
 	}
 	bool isCommand(std::string& line)
 	{
@@ -401,23 +402,23 @@ private:
 
 	void processCommand(std::string& line)
 	{
-		if(line  == "!help")
+		if((line  == "!help") || (line == "!h"))
 		{
 			printHelp();
 		}
-		else if (line == "!broadcast")
+		else if ((line == "!broadcast") || (line == "!b"))
 		{
 			sendBroadcastMessage();
 		}
-		else if (line == "!users")
+		else if ((line == "!users") || (line == "!u"))
 		{
 			printKnownUsers();
 		}
-		else if (line == "!selectuser")
+		else if ((line == "!selectuser") || (line == "!s"))
 		{
 			selectUser();
 		}		
-		else if (line == "!quit")
+		else if ((line == "!quit") || (line == "!q"))
 		{
 			quit();
 		}

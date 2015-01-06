@@ -276,13 +276,6 @@ private:
                 break;
             }
         }
-  
-        //socket = SSL_get_fd(ssl);     
-        //SSL_free(ssl);   
-        //close(socket); 
-        //FD_CLR(client.descriptor, &clientsSet_);
-        //clientDescriptors_.erase(std::remove(clientDescriptors_.begin(), clientDescriptors_.end(), client), clientDescriptors_.end());
-
     }
 
     std::string getClientCN(SSL *ssl)
@@ -309,19 +302,18 @@ private:
         if (SSL_CTX_set_default_verify_paths(ctx) != 1)
             ERR_print_errors_fp(stderr);
         
-        /* set the local certificate from CertFile */
         if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
         {
             ERR_print_errors_fp(stderr);
             abort();
         }
-        /* set the private key from KeyFile (may be the same as CertFile) */
+
         if (SSL_CTX_use_PrivateKey_file(ctx, keyFile.c_str(), SSL_FILETYPE_PEM) <= 0)
         {
             ERR_print_errors_fp(stderr);
             abort();
         }
-        /* verify private key */
+
         if (!SSL_CTX_check_private_key(ctx))
         {
             fprintf(stderr, "Private key does not match the public certificate\n");
