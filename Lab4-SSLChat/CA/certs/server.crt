@@ -1,62 +1,18 @@
-Certificate:
-    Data:
-        Version: 3 (0x2)
-        Serial Number: 4660 (0x1234)
-    Signature Algorithm: sha1WithRSAEncryption
-        Issuer: C=PL, ST=dolnoslaskie, L=Wroclaw, O=Pwr, OU=BusLab, CN=BusLab/emailAddress=184792@student.pwr.wroc.pl
-        Validity
-            Not Before: Nov 12 16:52:06 2014 GMT
-            Not After : Nov 12 16:52:06 2015 GMT
-        Subject: C=PL, ST=dolnoslaskie, L=Wroclaw, O=Pwr, OU=Bus, CN=Bus/emailAddress=184792@student.pwr.wroc.pl
-        Subject Public Key Info:
-            Public Key Algorithm: rsaEncryption
-                Public-Key: (1024 bit)
-                Modulus:
-                    00:c4:bd:93:cd:28:0c:ea:c5:70:2b:e3:0a:76:97:
-                    b3:d9:00:80:b4:cb:88:bb:77:df:b2:a4:98:51:3c:
-                    2f:11:fa:1c:94:87:fd:fe:f8:23:c9:a5:2e:c0:ba:
-                    98:5c:e0:d8:17:74:bf:3e:ae:8c:e3:84:fb:c2:18:
-                    d3:5d:f9:6e:ca:fb:f1:ec:78:01:85:5f:0b:fd:39:
-                    d1:84:9a:82:3d:47:f2:58:16:95:60:dc:b8:3d:6d:
-                    f8:0b:f3:0c:4e:89:7c:02:f2:64:bc:1d:b2:99:43:
-                    54:4a:c4:18:e4:39:47:38:4b:dd:43:63:3b:69:bb:
-                    1c:5d:40:b3:9a:3c:3d:43:a1
-                Exponent: 65537 (0x10001)
-        X509v3 extensions:
-            X509v3 Basic Constraints: 
-                CA:FALSE
-            Netscape Comment: 
-                OpenSSL Generated Certificate
-            X509v3 Subject Key Identifier: 
-                E9:F4:32:CA:AD:78:6B:12:21:7F:6E:E9:F6:4B:14:56:BA:EA:AF:82
-            X509v3 Authority Key Identifier: 
-                keyid:2B:A0:AA:7D:B8:98:42:9B:E7:93:3A:6E:AF:64:64:7C:4A:8C:DF:47
-
-    Signature Algorithm: sha1WithRSAEncryption
-         75:05:73:33:cf:49:f8:f7:1b:6c:0f:8e:5d:6a:79:2b:70:e0:
-         c6:12:7a:d5:87:5d:d8:b0:b3:55:04:bb:a6:02:48:2e:2b:22:
-         a6:c7:bb:c3:49:4a:14:e9:3e:e2:f8:f1:97:17:1e:23:94:6c:
-         32:9d:ea:34:68:23:6c:98:1c:bf:cd:b6:e5:6d:f1:2c:f0:f0:
-         ca:9d:85:78:60:c9:63:0f:63:f7:01:42:bb:0b:6f:ca:cf:dd:
-         ff:d6:fc:cd:f4:64:26:be:25:82:cb:a0:e1:62:38:9c:69:c3:
-         4a:e7:0b:e2:df:94:6f:fe:e4:27:c3:2f:da:dd:8d:eb:1e:bb:
-         6e:04
 -----BEGIN CERTIFICATE-----
-MIIDEDCCAnmgAwIBAgICEjQwDQYJKoZIhvcNAQEFBQAwgZExCzAJBgNVBAYTAlBM
-MRUwEwYDVQQIDAxkb2xub3NsYXNraWUxEDAOBgNVBAcMB1dyb2NsYXcxDDAKBgNV
-BAoMA1B3cjEPMA0GA1UECwwGQnVzTGFiMQ8wDQYDVQQDDAZCdXNMYWIxKTAnBgkq
-hkiG9w0BCQEWGjE4NDc5MkBzdHVkZW50LnB3ci53cm9jLnBsMB4XDTE0MTExMjE2
-NTIwNloXDTE1MTExMjE2NTIwNlowgYsxCzAJBgNVBAYTAlBMMRUwEwYDVQQIDAxk
-b2xub3NsYXNraWUxEDAOBgNVBAcMB1dyb2NsYXcxDDAKBgNVBAoMA1B3cjEMMAoG
-A1UECwwDQnVzMQwwCgYDVQQDDANCdXMxKTAnBgkqhkiG9w0BCQEWGjE4NDc5MkBz
-dHVkZW50LnB3ci53cm9jLnBsMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDE
-vZPNKAzqxXAr4wp2l7PZAIC0y4i7d9+ypJhRPC8R+hyUh/3++CPJpS7Auphc4NgX
-dL8+rozjhPvCGNNd+W7K+/HseAGFXwv9OdGEmoI9R/JYFpVg3Lg9bfgL8wxOiXwC
-8mS8HbKZQ1RKxBjkOUc4S91DYztpuxxdQLOaPD1DoQIDAQABo3sweTAJBgNVHRME
-AjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0
-ZTAdBgNVHQ4EFgQU6fQyyq14axIhf27p9ksUVrrqr4IwHwYDVR0jBBgwFoAUK6Cq
-fbiYQpvnkzpur2RkfEqM30cwDQYJKoZIhvcNAQEFBQADgYEAdQVzM89J+PcbbA+O
-XWp5K3DgxhJ61Ydd2LCzVQS7pgJILisipse7w0lKFOk+4vjxlxceI5RsMp3qNGgj
-bJgcv8225W3xLPDwyp2FeGDJYw9j9wFCuwtvys/d/9b8zfRkJr4lgsug4WI4nGnD
-SucL4t+Ub/7kJ8Mv2t2N6x67bgQ=
+MIIC8jCCAlugAwIBAgIJAOS1FFi+WduoMA0GCSqGSIb3DQEBBQUAMIGRMQswCQYD
+VQQGEwJQTDEVMBMGA1UECAwMZG9sbm9zbGFza2llMRAwDgYDVQQHDAdXcm9jbGF3
+MQwwCgYDVQQKDANQd3IxDzANBgNVBAsMBkJ1c0xhYjEPMA0GA1UEAwwGQnVzTGFi
+MSkwJwYJKoZIhvcNAQkBFhoxODQ3OTJAc3R1ZGVudC5wd3Iud3JvYy5wbDAeFw0x
+NDExMTIxNjI3MjZaFw0yNDExMDkxNjI3MjZaMIGRMQswCQYDVQQGEwJQTDEVMBMG
+A1UECAwMZG9sbm9zbGFza2llMRAwDgYDVQQHDAdXcm9jbGF3MQwwCgYDVQQKDANQ
+d3IxDzANBgNVBAsMBkJ1c0xhYjEPMA0GA1UEAwwGQnVzTGFiMSkwJwYJKoZIhvcN
+AQkBFhoxODQ3OTJAc3R1ZGVudC5wd3Iud3JvYy5wbDCBnzANBgkqhkiG9w0BAQEF
+AAOBjQAwgYkCgYEAuBHEYNLrLneypXB+ubnpZqedTArzx1CC1MsAnJXVFjW5Pv58
+AxN9HfM8WqSuRUQpuO9X9knBPcxyEcUpl7LU1JfgsUIdjq4VQGiVc7O5J/yCzvf6
+vmaYwDLcQx+H85EGl8O/a+DOChFgzFOwbRK3ffX5RIgunLe4ARo7pFkEybcCAwEA
+AaNQME4wHQYDVR0OBBYEFCugqn24mEKb55M6bq9kZHxKjN9HMB8GA1UdIwQYMBaA
+FCugqn24mEKb55M6bq9kZHxKjN9HMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEF
+BQADgYEAaYFgNHCmoMjPfr7bm5wNmxzxYWMpBAQTVNWVUtd5gICDduE0p2PrD3CT
+TR5ygIzPo+oH/AcUISP4biKDJ4FRdwj42NapbN+q9U8A8zQiu2nY3xPgQbQa07IT
+4haRsMU1wkW37bNeFbulSCEtpZ5PpxHldDUfbuO0qdX9T5yruMs=
 -----END CERTIFICATE-----

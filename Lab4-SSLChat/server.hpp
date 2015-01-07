@@ -1,39 +1,33 @@
-//SSL-Server.c
-#include <vector>
-#include <errno.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <string>
+#include <algorithm>
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <errno.h>
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <malloc.h>
+#include <map>
 #include <netinet/in.h>
-#include <resolv.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
-#include <iostream>
-#include <exception>
+#include <resolv.h>
+#include <string>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <stdexcept>
 #include <sstream>
-#include <map>
-#include <algorithm>
+#include <set>
+#include <unistd.h>
+#include <vector>
 
 #include "message.hpp"
 
 #define FAIL    -1
 
-/* TODO:
-    + wiecej niz 1 klient
-    - rozglaszanie do wszystkich (na podstawie certyfikatow, tylko wybrani klienci)
-    - w clientDesc informacja na podstawie certyfikatu (nie nickname'a) że klient może rozgłać wiadomości
-    - komunikacja 1 do 1
-*/
-
 struct ClientDesc
 {
     int descriptor;
     SSL* ssl;
-    std::string name;
+    bool canBroadcast;
 
     bool operator==(const ClientDesc& cli)
     {
@@ -49,14 +43,59 @@ public:
     
     void start() 
     {
-        SSL_library_init();
-        serverContext_ = initServerContext();
-        loadCertificates(serverContext_, certFile_, keyFile_);
-        FD_ZERO(&clientsSet_);
-        listenForClients();
+        try
+        {
+            readClientsThatCanBroadcastFromFile();
+            SSL_library_init();
+            serverContext_ = initServerContext();
+            loadCertificates(serverContext_, certFile_, keyFile_);
+            FD_ZERO(&clientsSet_);
+            std::cout << "Server is ready for accepting connections." <<std::endl;
+            listenForClients();
+        }
+        catch (std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+            exit(1);
+        }
+    }
+
+    void INThandler()
+    {
+        std::cout << std::endl << "Killing server by INT signal... Need to tell all clients about it." << std::endl;
+        Message msg(Message::SERVER_DIED, 0, 0, "");
+        broadcast(msg);
+        exit(0);
     }
 
 private:
+    void readClientsThatCanBroadcastFromFile()
+    {
+        std::cout << "Reading broadcast users from file..." << std::endl;
+        std::ifstream file ("clientBroadcast.cfg");
+        if(file.is_open())
+        {
+            std::string username;
+            while( std::getline (file, username) )
+            {
+                usersThatCanBroadcast_.insert(username);
+            }
+            file.close();
+          }
+    }
+
+    bool isNameOnBroadcastList(std::string name)
+    {
+        if(usersThatCanBroadcast_.find(name) != usersThatCanBroadcast_.end())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     void listenForClients()
     {
         listener_ = openListener(port_);
@@ -89,6 +128,9 @@ private:
                 desc.descriptor = client;
                 desc.ssl = ssl;
 
+                std::cout << "Connected client real name: " << getClientCN(ssl) << std::endl;
+                desc.canBroadcast = isNameOnBroadcastList(getClientCN(ssl));
+
                 clientDescriptors_[client] = desc;
                 FD_SET(client, &clientsSet_);
                 if(client > maximumClientDescriptor_) maximumClientDescriptor_ = client;
@@ -98,7 +140,6 @@ private:
             {
                 temporarySet_ = clientsSet_;
                 select(maximumClientDescriptor_+1, &temporarySet_, NULL, NULL, NULL);
-                //std::cout << "Checking client: " << client.descriptor << std::endl;
                 if(FD_ISSET(client.second.descriptor, &temporarySet_))
                 {
                     serveClient(client.second);
@@ -128,25 +169,74 @@ private:
         return serverResp;
     }
 
-    void broadcast(SSL* senderSsl, Message& msg)
+    void broadcast(Message& msg)
     {
         for(auto& client: clientDescriptors_)
         {
-            if(senderSsl != client.second.ssl)
-            {
-                SSL_write(client.second.ssl, msg.serialize(), msg.getMessageSize());
-            }
+            SSL_write(client.second.ssl, msg.serialize(), msg.getMessageSize());
         }     
     }
 
-    void registerClient(Message& message, int client)
+    void broadcastInfoAboutAllConnectedClients()
     {
+        for(auto& known: clientNameToDescriptorBind_)
+        {
+            Message clientInd(Message::CLIENT_CONN_IND, known.first, 0, known.second);
+            broadcast(clientInd);  
+        }
+    }
 
+    void broadcastInfoAboutQuitClient(ClientDesc client)
+    {
+        Message clientInd(Message::CLIENT_QUIT_IND, client.descriptor, 0, "");
+        broadcast(clientInd);
+    }
+
+    bool isClientAbleToBroadcastMessage(int clientId)
+    {
+        return clientDescriptors_[clientId].canBroadcast; // for now everyone can broadcast
+    }
+
+    void broadcastTextMessageToAll(Message& message, ClientDesc client)
+    {
+        message.setClientSource(client.descriptor);
+        if(isClientAbleToBroadcastMessage(client.descriptor))
+        {
+            broadcast(message); 
+        }
+        else
+        {
+            std::cout << "Client: " << client.descriptor << " can't broadcast messages due to certificate name restrictions." << std::endl;
+        }
+
+    }
+
+    void registerClient(Message& message, ClientDesc client)
+    {
+        std::cout << "New client register request received - " << message.getPayload() <<std::endl;
+        clientNameToDescriptorBind_[client.descriptor] = std::string(message.getPayload());
+        broadcastInfoAboutAllConnectedClients();
+    }
+
+    void forwardMessage(Message& message, ClientDesc client)
+    {
+        message.setClientSource(client.descriptor);
+        int clientDest = message.getClientDestination();
+        std::cout << "Forwarding message from " << 
+        clientNameToDescriptorBind_[client.descriptor] << " to "  <<
+        clientNameToDescriptorBind_[clientDest] << std::endl;
+        send(clientDescriptors_[clientDest].ssl ,message);
+    }
+
+    void forgetAboutClient(ClientDesc client)
+    {
+        clientDescriptors_.erase(client.descriptor);
+        clientNameToDescriptorBind_.erase(client.descriptor);
+        FD_CLR(client.descriptor, &clientsSet_);
     }
 
     void serveClient(ClientDesc client)
     {   
-        std::cout << "serveClient "<< client.descriptor << " method" << std::endl;
         SSL* ssl;
         ssl = client.ssl;
 
@@ -157,7 +247,26 @@ private:
         {
             case Message::REGISTER_REQ :
             {
+                registerClient(req, client);
+                break;
+            }
 
+            case Message::TEXT_MSG : 
+            {
+                forwardMessage(req, client);
+                break;
+            }
+
+            case Message::BROADCAST_MSG : 
+            {
+                broadcastTextMessageToAll(req, client);
+                break;
+            }
+
+            case Message::CLIENT_QUIT_IND : 
+            {
+                forgetAboutClient(client);
+                broadcastInfoAboutQuitClient(client);
                 break;
             }
 
@@ -166,21 +275,21 @@ private:
                 break;
             }
         }
-  
-        std::cout << "==================================" << std::endl;
-        std::cout << "Client message:\t" << req << std::endl;
-        std::cout << "Client id:\t" << client.descriptor <<std::endl;
+    }
 
-        Message resp(Message::REGISTER_RESP, 0, "Hello Client!"); 
+    std::string getClientCN(SSL *ssl)
+    {
+        X509 *crt = SSL_get_peer_certificate(ssl);
 
-        send(ssl, resp);
+        std::string ownName (X509_NAME_oneline(X509_get_subject_name(crt), 0, 0));
 
-        //socket = SSL_get_fd(ssl);     
-        //SSL_free(ssl);   
-        //close(socket); 
-        //FD_CLR(client.descriptor, &clientsSet_);
-        //clientDescriptors_.erase(std::remove(clientDescriptors_.begin(), clientDescriptors_.end(), client), clientDescriptors_.end());
+        std::size_t startPos = ownName.find("/CN=");
+        std::size_t endPos = ownName.find("/emailAddress=");
 
+        const char CN_LEN = 4;
+        ownName = ownName.substr(startPos+CN_LEN,endPos-(startPos+CN_LEN));  
+        
+        return ownName;
     }
 
     void loadCertificates(SSL_CTX* ctx, std::string certFile, std::string keyFile)
@@ -192,19 +301,18 @@ private:
         if (SSL_CTX_set_default_verify_paths(ctx) != 1)
             ERR_print_errors_fp(stderr);
         
-        /* set the local certificate from CertFile */
         if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
         {
             ERR_print_errors_fp(stderr);
             abort();
         }
-        /* set the private key from KeyFile (may be the same as CertFile) */
+
         if (SSL_CTX_use_PrivateKey_file(ctx, keyFile.c_str(), SSL_FILETYPE_PEM) <= 0)
         {
             ERR_print_errors_fp(stderr);
             abort();
         }
-        /* verify private key */
+
         if (!SSL_CTX_check_private_key(ctx))
         {
             fprintf(stderr, "Private key does not match the public certificate\n");
@@ -261,6 +369,8 @@ private:
     fd_set temporarySet_;
     fd_set clientsSet_;
     std::map<int, ClientDesc> clientDescriptors_;
+    std::map<int, std::string> clientNameToDescriptorBind_;
+    std::set<std::string> usersThatCanBroadcast_;
     std::string certFile_;
     std::string keyFile_;
     int port_;

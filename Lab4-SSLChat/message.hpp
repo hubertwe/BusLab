@@ -1,5 +1,5 @@
-#include <string>
 #include <iostream>
+#include <string>
 
 class Message
 {
@@ -8,11 +8,11 @@ public:
 	enum Type
 	{
 		REGISTER_REQ,
-		REGISTER_RESP,
 		TEXT_MSG,
 		BROADCAST_MSG,
 		CLIENT_CONN_IND,
-		CLIENT_LOST_IND
+		CLIENT_QUIT_IND,
+		SERVER_DIED
 	};
 
 	enum Status 
@@ -21,12 +21,22 @@ public:
 		FAIL
 	};
 
-	Message(Type type, int dest, const char* payload)
+	Message(Type type, int source, int dest, const char* payload)
 	{
 		setType(type);
 		setStatus(OK);
+		setClientSource(source);
 		setClientDestination(dest);
 		setPayload(payload);
+	}
+
+	Message(Type type, int source, int dest, std::string payload)
+	{
+		setType(type);
+		setStatus(OK);
+		setClientSource(source);
+		setClientDestination(dest);
+		setPayload(payload.c_str());
 	}
 
 	Message()
@@ -37,21 +47,23 @@ public:
 		return out << std::endl <<
 		"\tType: "<< m.getType() << std::endl <<
 		"\tStatus: "<< m.getStatus() << std::endl <<
+		"\tSource: "<< m.getClientSource() << std::endl <<
 		"\tDestination: "<< m.getClientDestination() << std::endl <<
 		"\tPAYLOAD: "<< std::string(m.getPayload());
 	}
 
 	static constexpr int getMessageSize()
 	{
-		return sizeof(Type) + sizeof(Status) +sizeof(int) + PAYLOAD_SIZE;
+		return sizeof(Type) + sizeof(Status) + 2 * sizeof(int) + PAYLOAD_SIZE;
 	}
 
 	void serializeToBuffer(char* buffer)
 	{
 		buffer[0] = type_;
 		buffer[1] = status_;
-		buffer[2] = clientDestination_;
-		memcpy(buffer + sizeof(Type) + sizeof(Status) + sizeof(int), payload_, PAYLOAD_SIZE);
+		buffer[2] = clientSource_;
+		buffer[3] = clientDestination_;
+		memcpy(buffer + sizeof(Type) + sizeof(Status) + 2 * sizeof(int), payload_, PAYLOAD_SIZE);
 	}
 
 	char* serialize()
@@ -64,8 +76,9 @@ public:
 	{
 		type_ = static_cast<Type>(buffer[0]);
 		status_ = static_cast<Status>(buffer[1]);
-		clientDestination_ = buffer[2];
-		memcpy(payload_, buffer+ sizeof(Status) + sizeof(Type) + sizeof(int), PAYLOAD_SIZE);
+		clientSource_ = buffer[2];
+		clientDestination_ = buffer[3];
+		memcpy(payload_, buffer+ sizeof(Status) + sizeof(Type) + 2 * sizeof(int), PAYLOAD_SIZE);
 	}
 
 	void deserialize()
@@ -88,6 +101,11 @@ public:
 		clientDestination_ = clientId;
 	}
 
+	void setClientSource(int clientId)
+	{
+		clientSource_ = clientId;
+	}
+
 	void setPayload(const char* payload)
 	{
 		memcpy(payload_, payload, PAYLOAD_SIZE);
@@ -106,6 +124,11 @@ public:
 	bool isStatusValid() const
 	{
 		return (getStatus() == OK);
+	}
+
+	int getClientSource() const
+	{
+		return clientSource_;
 	}
 
 	int getClientDestination() const
@@ -129,7 +152,8 @@ private:
 	Type type_;
 	Status status_;
 	int clientDestination_;
+	int clientSource_;
 	char payload_[PAYLOAD_SIZE];
-	char serialized_[PAYLOAD_SIZE+sizeof(int)+sizeof(Type)];
+	char serialized_[PAYLOAD_SIZE + 2* sizeof(int) + sizeof(Type) + sizeof(Status)];
 };
 
